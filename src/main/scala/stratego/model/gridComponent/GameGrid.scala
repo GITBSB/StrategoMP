@@ -4,6 +4,7 @@ import com.google.inject.Inject
 
 import scala.stratego.model.gridComponent.{FieldType, Matrix}
 import scala.math.sqrt
+import scala.reflect.api.Position
 
 case class GameGrid @Inject() (grid: Matrix[Field]) extends GridInterface{
   def this(size: Int) = this(new Matrix[Field](size, Field(FieldType.EMPTY_FIELD)))
