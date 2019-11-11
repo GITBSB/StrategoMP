@@ -2,6 +2,7 @@ package stratego.model.gridComponent
 
 import scala.stratego.model.gridComponent.{FieldType, Matrix}
 import scala.math.sqrt
+import scala.reflect.api.Position
 
 case class GameGrid(grid: Matrix[Field]) extends GridInterface{
   def this(size: Int) = this(new Matrix[Field](size, Field(FieldType.EMPTY_FIELD)))
