@@ -19,6 +19,4 @@ object Figure {
   class Flag(player: Player) extends Figure("Flag", "[FL]",  0, player)
   class Spy(player: Player) extends Figure("Spy", "[Sp]",  1, player)
   class Bomb(player: Player) extends Figure("Bomb", "[BO]",  100, player)
-  class NoFigure(player: Player) extends Figure("XX", "[  ]",  0, player)
-
 }
