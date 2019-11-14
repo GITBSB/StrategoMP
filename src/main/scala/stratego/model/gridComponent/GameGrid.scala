@@ -1,13 +1,11 @@
 package stratego.model.gridComponent
 
-import stratego.model
-import stratego.model.gridComponent
 import stratego.model.playerComponent.Player
-
+import com.google.inject.Inject
 import scala.stratego.model.gridComponent.{FieldType, Matrix}
 import scala.math.sqrt
 
-case class GameGrid(grid: Matrix[Field]) extends GridInterface{
+case class GameGrid @Inject() (grid: Matrix[Field]) extends GridInterface{
   def this(size: Int) = this(new Matrix[Field](size, Field(FieldType.EMPTY_FIELD, new Figure.NoFigure(new Player("game")))))
 
   val size: Int = grid.size
@@ -24,7 +22,6 @@ case class GameGrid(grid: Matrix[Field]) extends GridInterface{
       row <- 6 until 10
       col <- 0 until 10
     } gameGrid = copy(grid.replaceField(row, col, Field(FieldType.B_SIDE, new Figure.NoFigure(new Player("game")))))
-
     gameGrid = copy(grid.replaceField(4, 2, Field(FieldType.NO_FIELD, new Figure.NoFigure(new Player("game")))))
     gameGrid = copy(grid.replaceField(4, 3, Field(FieldType.NO_FIELD, new Figure.NoFigure(new Player("game")))))
     gameGrid = copy(grid.replaceField(5, 2, Field(FieldType.NO_FIELD, new Figure.NoFigure(new Player("game")))))
@@ -49,4 +46,9 @@ case class GameGrid(grid: Matrix[Field]) extends GridInterface{
     stringGrid
   }
 
+  def createNewGameGrid(): GridInterface = {
+    var grid: GridInterface = new GameGrid(10)
+    grid = grid.createPlayableGrid()
+    grid
+  }
 }
