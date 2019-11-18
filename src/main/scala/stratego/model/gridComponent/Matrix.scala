@@ -6,7 +6,7 @@ case class Matrix[T](grid: Vector[Vector[T]]) {
 
   val size: Int = grid.size
 
-  def field(row: Int, col: Int): T = grid(row) (col)
+  def field(row: Int, col: Int): T = grid(row)(col)
 
   def replaceField(row: Int, col: Int, field: T): Matrix[T] =
     copy(grid.updated(row, grid(row).updated(col, field)))
