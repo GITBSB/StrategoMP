@@ -35,9 +35,8 @@ case class GameGrid @Inject() (grid: Matrix[Field]) extends GridInterface{
   }
 
   def createNewGameGrid(): GridInterface = {
-    var grid: GridInterface = new GameGrid(10)
-    grid = grid.createPlayableGrid()
-    grid
+    var grid = new GameGrid(10)
+    grid.createPlayableGrid()
   }
 
   override def toString: String = {
@@ -49,7 +48,6 @@ case class GameGrid @Inject() (grid: Matrix[Field]) extends GridInterface{
       stringGrid = stringGrid + "[" + field(row, col).toString + "]"
       if (col == 9) stringGrid = stringGrid + " " + row +"\n"
     }
-    stringGrid += "\n- A - B - C - D - E - F - G - H - I - J";
-    stringGrid
+    stringGrid + "\n- A - B - C - D - E - F - G - H - I - J";
   }
 }
