@@ -58,8 +58,6 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
   }
 
   def createNewGrid(): GridInterface = {
-    var grid: GridInterface = new Grid()
-    grid = grid.createPlayableGrid()
-    grid
+    createPlayableGrid()
   }
 }

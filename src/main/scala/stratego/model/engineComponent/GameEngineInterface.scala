@@ -1,11 +1,13 @@
-package stratego.controller
+package stratego.model.engineComponent
+
+import stratego.model.gridComponent.GridInterface
 
 import scala.swing.Publisher
 import scala.swing.event.Event
 
-trait ControllerInterface extends Publisher {
+trait GameEngineInterface extends Publisher {
 
- def createNewGrid: Unit
+ def createNewGrid: GridInterface
  def gridToString: String
  def getGameStatus: String
 
