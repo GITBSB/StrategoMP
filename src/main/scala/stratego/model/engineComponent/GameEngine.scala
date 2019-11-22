@@ -3,12 +3,12 @@ package stratego.model.engineComponent
 import com.google.inject.Inject
 import com.typesafe.scalalogging.LazyLogging
 import stratego.controller.GameStatus._
-import stratego.model.gridComponent.GridInterface
+import stratego.model.gridComponent.{FigureSet, GridInterface}
 import stratego.model.playerComponent.Player
 
-class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface with LazyLogging  {
-  val playerA: Player = Player("PlayerA")
-  val playerB: Player = Player("PlayerB")
+class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface with LazyLogging {
+  val playerA: Player = Player("PlayerA", new FigureSet())
+  val playerB: Player = Player("PlayerB", new FigureSet())
 
   var gameStatus: GameStatus = INACTIVE
 
@@ -16,13 +16,12 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
     grid = grid.createNewGrid()
     gameStatus = NEW_GAME
 
-    printTui
-    // TODO: Not working publish
-    //publish(new GameChanged)
+    publish(new GameChanged)
+
   }
 
   def quitGame():Unit = {
-    //publish(new EventClass)
+    publish(new GameQuit)
   }
 
 
@@ -31,9 +30,4 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
 
   def getGameStatus: String = gameStatus.toString
 
-  def printTui: Unit = {
-    logger.info("printTui")
-    logger.info(gridToString)
-    logger.info(getGameStatus)
-  }
 }

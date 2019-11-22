@@ -1,7 +1,5 @@
 package stratego.model.gridComponent
 
-import stratego.model.gridComponent.Figure.{Bomb, Captain, Colonel, Flag, General, Lieutenant, Major, Marshal, Miner, Scout, Sergeant, Spy}
-
 case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
  def this() = this(Map(
     FigureType.BOMB -> 6,
@@ -33,7 +31,7 @@ case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
     figureSet = copy(figures.updated(figureType, getFigureCount(figureType) - 1))
     figureSet
   }
-
+/*
   // TODO better?
   private val figuresL = Map(
     FigureType.BOMB -> List(Bomb, Bomb, Bomb, Bomb, Bomb, Bomb),
@@ -49,4 +47,6 @@ case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
     FigureType.SPY -> List(Spy),
     FigureType.FLAG -> List(Flag),
   )
+  */
+
 }

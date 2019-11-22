@@ -11,7 +11,7 @@ class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging{
     input match {
       case "n" =>
         gameEngine.createNewGrid
-      case "q" =>
+      case "q" => stopProcessingInput = true
         gameEngine.quitGame
       case "s" =>
         logger.info("\nChose which figure to place on field:\n"

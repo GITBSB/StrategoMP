@@ -11,7 +11,7 @@ object Stratego {
 
   val injector: Injector = Guice.createInjector(new StrategoModule)
   val gameEngine: GameEngineInterface = injector.getInstance(classOf[GameEngineInterface])
-  val tui: Tui = new Tui()
+  val tui: Tui = new Tui(gameEngine)
   val consoleController = new ConsoleController(gameEngine)
 
 

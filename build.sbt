@@ -18,7 +18,5 @@ libraryDependencies += "com.typesafe.scala-logging" %% "scala-logging" % "3.9.2"
 
 libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
 
-libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.2.3"
-
 libraryDependencies += "com.typesafe.akka" % "akka-actor_2.11" % "2.4.20"
 
