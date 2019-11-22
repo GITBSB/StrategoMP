@@ -27,9 +27,6 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
     col <- 0 until 10
   } grid = copy(grid.matrix.replaceField(row, col, Field(FieldType.B_SIDE, NoFigure(Player("Dummy")))))
 
-
-    grid = fieldAssignment(4, 2, fieldAssignment(4, 3, fieldAssignment(5, 2, fieldAssignment(5, 3, fieldAssignment(4, 6, fieldAssignment(4, 7, fieldAssignment(5, 6, fieldAssignment(5, 7, grid))))))))
-/*
   grid = copy(grid.matrix.replaceField(4, 2, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
   grid = copy(grid.matrix.replaceField(4, 3, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
   grid = copy(grid.matrix.replaceField(5, 2, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
@@ -37,12 +34,11 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
   grid = copy(grid.matrix.replaceField(4, 6, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
   grid = copy(grid.matrix.replaceField(4, 7, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
   grid = copy(grid.matrix.replaceField(5, 6, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
-  grid = copy(grid.matrix.replaceField(5, 7, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))*/
-
+  grid = copy(grid.matrix.replaceField(5, 7, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
   grid
 }
 
-  private def fieldAssignment(row: Int, col: Int, grid: Grid) = copy(grid.matrix.replaceField(row, col, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))));
+  private def fieldAssignment(row: Int, col: Int, grid: GridInterface) = {var grid = this; grid = copy(grid.matrix.replaceField(4, 2, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))); grid}
 
   override def toString: String = {
   logger.info("gridtostring")
