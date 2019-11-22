@@ -22,7 +22,7 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
   }
 
   def quitGame():Unit = {
-    //publish(new QuitStratego)
+    //publish(new EventClass)
   }
 
 

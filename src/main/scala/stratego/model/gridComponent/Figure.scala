@@ -19,7 +19,6 @@ object Figure {
   case class Flag(override val player: Player) extends Figure(FigureType.FLAG.toString, "[FL]",  0, player)
   case class Spy(override val player: Player) extends Figure(FigureType.SPY.toString, "[Sp]",  1, player)
   case class Bomb(override val player: Player) extends Figure(FigureType.BOMB.toString, "[BO]",  100, player)
-  case class NoFigure(override val player: Player) extends Figure(FigureType.NOFIGURE.toString, "[  ]",  0, player)
 
 }
 
