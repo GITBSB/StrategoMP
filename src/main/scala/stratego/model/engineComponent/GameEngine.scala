@@ -1,12 +1,12 @@
-package stratego.controller
+package stratego.model.engineComponent
 
-import com.google.inject.{ Inject}
+import com.google.inject.Inject
 import com.typesafe.scalalogging.LazyLogging
 import stratego.controller.GameStatus._
-import stratego.model.gridComponent.{GridInterface}
+import stratego.model.gridComponent.GridInterface
 import stratego.model.playerComponent.Player
 
-class Controller@Inject()(var grid: GridInterface) extends ControllerInterface with LazyLogging  {
+class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface with LazyLogging  {
   val playerA: Player = Player("PlayerA")
   val playerB: Player = Player("PlayerB")
 
@@ -18,12 +18,13 @@ class Controller@Inject()(var grid: GridInterface) extends ControllerInterface w
 
     printTui
     // TODO: Not working publish
-    publish(new GameChanged)
+    //publish(new GameChanged)
   }
 
   def quitGame():Unit = {
-    publish(new QuitStratego)
+    //publish(new QuitStratego)
   }
+
 
 
   def gridToString: String = grid.toString

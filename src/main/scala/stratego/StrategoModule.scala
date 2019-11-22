@@ -3,8 +3,7 @@ package stratego
 import com.google.inject.AbstractModule
 import net.codingwell.scalaguice.ScalaModule
 import stratego.model.engineComponent.{GameEngine, GameEngineInterface}
-import stratego.model.gridComponent
-import stratego.model.gridComponent.{GameEngineInterface, Grid, GridInterface}
+import stratego.model.gridComponent.{Grid, GridInterface}
 
 class StrategoModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
