@@ -1,6 +1,6 @@
 package stratego.controller
 
-import com.google.inject.{Guice, Inject, Injector}
+import com.google.inject.{ Inject}
 import com.typesafe.scalalogging.LazyLogging
 import stratego.controller.GameStatus._
 import stratego.model.gridComponent.{GridInterface}
@@ -15,14 +15,24 @@ class Controller@Inject()(var grid: GridInterface) extends ControllerInterface w
   def createNewGrid: Unit = {
     grid = grid.createNewGrid()
     gameStatus = NEW_GAME
-    logger.info("printTui")
-    logger.info(gridToString)
-    logger.info(getGameStatus)
-    publish(new ShutdownStratego)
+
+    printTui
+    // TODO: Not working publish
     publish(new GameChanged)
   }
+
+  def quitGame():Unit = {
+    publish(new QuitStratego)
+  }
+
 
   def gridToString: String = grid.toString
 
   def getGameStatus: String = gameStatus.toString
+
+  def printTui: Unit = {
+    logger.info("printTui")
+    logger.info(gridToString)
+    logger.info(getGameStatus)
+  }
 }

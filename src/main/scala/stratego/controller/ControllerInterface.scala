@@ -8,8 +8,11 @@ trait ControllerInterface extends Publisher {
  def createNewGrid: Unit
  def gridToString: String
  def getGameStatus: String
+ def quitGame():Unit
 
 }
 
+
 class GameChanged extends Event
-class ShutdownStratego extends Event
+class QuitStratego extends Event
+
