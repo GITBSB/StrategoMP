@@ -12,18 +12,14 @@ import scala.stratego.model.gridComponent.FieldType
 class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface with LazyLogging {
   val playerA: Player = Player("PlayerA", FieldType.A_SIDE)
   val playerB: Player = Player("PlayerB", FieldType.B_SIDE)
-  private var figureSet = Map(playerA -> new FigureSet(playerA),
-                      playerB -> new FigureSet(playerB))
-
   var activePlayer = playerA
   var gameStatus: GameStatus = INACTIVE
+  private var figureSet = Map(playerA -> new FigureSet(playerA), playerB -> new FigureSet(playerB))
 
   def createNewGrid: Unit = {
     grid = grid.createNewGrid()
     gameStatus = NEW_GAME
-
     publish(new GameChanged)
-
   }
 
   def quitGame():Unit = {
@@ -38,6 +34,7 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
      }
       val figureSetTmp = figureSet(activePlayer).removeFigure(figureType)
       figureSet = figureSet.updated(activePlayer, figureSetTmp)
+      figureSet(activePlayer).figures.get(figureType).foreach(println)
       grid = grid.setFigure(row, col, figureSet(activePlayer).getLastFigure())
 
     }else {
@@ -48,13 +45,22 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
     publish(new GameChanged)
   }
 
+  def startBattle: Unit = {
+    gameStatus = FIGHT
+    publish(new GameChanged)
+  }
 
-  def changePlayer():Unit = if(activePlayer == playerA) activePlayer = playerB else activePlayer = playerA // evtl. wegen Änderungen auf playerturn playerA = playerturn else playerB = playerTurn
+  def changePlayer: Unit = {
+    if (activePlayer == playerA) activePlayer = playerB else activePlayer = playerA
+    publish(new GameChanged)
+  }
 
-  def getActivePlayer(): Player = activePlayer
+  def getActivePlayer: Player = activePlayer
 
   def gridToString: String = grid.toStringTUI(gameStatus, activePlayer)
 
   def getGameStatus: String = gameStatus.toString
+
+  def getFigureSetActivePlayer: FigureSet = figureSet(activePlayer)
 
 }

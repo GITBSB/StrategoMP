@@ -1,7 +1,6 @@
-package stratego.model
+package stratego.model.playerComponent
 
 import org.scalatest.{Matchers, WordSpec}
-import stratego.model.playerComponent.Player
 
 import scala.stratego.model.gridComponent.FieldType
 
@@ -11,6 +10,9 @@ class PlayerTest extends WordSpec with Matchers {
       val player = Player("Name", FieldType.B_SIDE)
       "has a name" in {
         player.name should be("Name")
+      }
+      "has a FieldType" in {
+        player.fieldType should be (FieldType.B_SIDE)
       }
       "has a String representation" in {
         player.toString should be("Name")

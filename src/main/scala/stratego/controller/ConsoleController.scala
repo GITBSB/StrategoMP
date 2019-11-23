@@ -11,27 +11,37 @@ class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging{
     input match {
       case "n" =>
         gameEngine.createNewGrid
-      case "q" => stopProcessingInput = true
+      case "q" =>
+        stopProcessingInput = true
         gameEngine.quitGame
+      case "c" =>
+        gameEngine.changePlayer
+      case "b" =>
+        gameEngine.startBattle
       case "s" =>
         logger.info("\nChose which figure to place on field:\n"
-          + "\n1 ->" + FigureType.BOMB
-          + "\n2 ->" + FigureType.MARSHAL
-          + "\n3 ->" + FigureType.GENERAL
-          + "\n4 ->" + FigureType.COLONEL
-          + "\n5 ->" + FigureType.MAJOR
-          + "\n6 ->" + FigureType.CAPTAIN
-          + "\n7 ->" + FigureType.LIEUTENANT
-          + "\n8 ->" + FigureType.SERGEANT
-          + "\n9 ->" + FigureType.MINER
-          + "\n10 ->" + FigureType.SCOUT
-          + "\n11 ->" + FigureType.SPY
-          + "\n12 ->" + FigureType.FLAG)
+          + "\n1 ->" + FigureType.BOMB + " | " +  gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.BOMB)
+          + "\n2 ->" + FigureType.MARSHAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MARSHAL)
+          + "\n3 ->" + FigureType.GENERAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.GENERAL)
+          + "\n4 ->" + FigureType.COLONEL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.COLONEL)
+          + "\n5 ->" + FigureType.MAJOR + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MAJOR)
+          + "\n6 ->" + FigureType.CAPTAIN + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.CAPTAIN)
+          + "\n7 ->" + FigureType.LIEUTENANT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.LIEUTENANT)
+          + "\n8 ->" + FigureType.SERGEANT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SERGEANT)
+          + "\n9 ->" + FigureType.MINER + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MINER)
+          + "\n10 ->" + FigureType.SCOUT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SCOUT)
+          + "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY)
+          + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG))
         val inputFigure = scala.io.StdIn.readInt()
-        logger.info("\nCoordinates - Input example: B,3")
-        val inputCo = scala.io.StdIn.readLine()
+        var boolReadLine = true
+        var inputCo = "None"
+        while(boolReadLine) {
+          logger.info("\nCoordinates - Input example: B,3")
+          inputCo = scala.io.StdIn.readLine()
+          if(inputCo.matches("[A-J],[0-9]")) boolReadLine = false
+        }
         val split = inputCo.split(",")
-        gameEngine.setFigure(convertInputToFigureType(inputFigure), 7, 9) //TODO: row, col
+        gameEngine.setFigure(convertInputToFigureType(inputFigure), split(1).toInt, split(0).head - 'A')
     }
     stopProcessingInput
   }
