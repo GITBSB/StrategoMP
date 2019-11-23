@@ -1,7 +1,46 @@
 package stratego.model.gridComponent
 
-case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
- def this() = this(Map(
+import stratego.model.gridComponent.Figure._
+import stratego.model.playerComponent.Player
+
+case class FigureSet(figures: Map[FigureType.FigureType, List[Figure]], lastFigure: Option[Figure]) {
+ def this(player: Player) = this(Map(
+   FigureType.BOMB -> List( Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player)),
+     FigureType.MARSHAL -> List(Marshal(player)),
+     FigureType.GENERAL -> List(General(player)),
+     FigureType.COLONEL -> List(Colonel(player), Colonel(player), Colonel(player)),
+     FigureType.MAJOR -> List(Major(player), Major(player), Major(player)),
+     FigureType.CAPTAIN -> List(Captain(player), Captain(player), Captain(player), Captain(player)),
+     FigureType.LIEUTENANT -> List(Lieutenant(player), Lieutenant(player), Lieutenant(player), Lieutenant(player)),
+     FigureType.SERGEANT -> List(Sergeant(player), Sergeant(player), Sergeant(player), Sergeant(player)),
+     FigureType.MINER -> List(Miner(player), Miner(player), Miner(player), Miner(player), Miner(player)),
+     FigureType.SCOUT -> List(Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player)),
+     FigureType.SPY -> List(Spy(player)),
+     FigureType.FLAG -> List(Flag(player))
+ ), None)
+
+  def removeFigure(figureType: FigureType.FigureType): FigureSet = {
+    var figureSet = this
+    var figureList = figures.get(figureType).get
+    val lastFigure = Some(figureList.head)
+    figureList = figureList diff List(lastFigure)
+    figureSet = copy(figures.updated(figureType, figureList), lastFigure)
+    figureSet
+  }
+
+  def addFigure(figure: Figure): FigureSet = {
+    var figureSet = this
+    val figureList = figure :: figures.get(figure.figureType).get
+    figureSet = copy(figures.updated(figure.figureType, figureList), Some(figure))
+    figureSet
+  }
+
+  def getFigureCount(figureType: FigureType.FigureType): Int = figures.get(figureType).get.size
+
+  def getLastFigure(): Option[Figure] = lastFigure
+
+/* if prev. not working try this option to count
+   def this() = this(Map(
     FigureType.BOMB -> 6,
     FigureType.MARSHAL -> 1,
     FigureType.GENERAL -> 1,
@@ -15,38 +54,6 @@ case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
     FigureType.SPY -> 1,
     FigureType.FLAG -> 1
   ))
-
-  def getFigureCount(figureType: FigureType.FigureType): Int= {
-    figures.getOrElse(figureType, 0)
-  }
-
-  def addToFigure(figureType: FigureType.FigureType): FigureSet = {
-    var figureSet = this
-    figureSet = copy(figures.updated(figureType, getFigureCount(figureType) + 1))
-    figureSet
-  }
-
-  def deleteFromFigure(figureType: FigureType.FigureType): FigureSet = {
-    var figureSet = this
-    figureSet = copy(figures.updated(figureType, getFigureCount(figureType) - 1))
-    figureSet
-  }
-/*
-  // TODO better?
-  private val figuresL = Map(
-    FigureType.BOMB -> List(Bomb, Bomb, Bomb, Bomb, Bomb, Bomb),
-    FigureType.MARSHAL -> List(Marshal),
-    FigureType.GENERAL -> List(General),
-    FigureType.COLONEL -> List(Colonel, Colonel, Colonel),
-    FigureType.MAJOR -> List(Major, Major, Major),
-    FigureType.CAPTAIN -> List(Captain, Captain, Captain, Captain),
-    FigureType.LIEUTENANT -> List(Lieutenant, Lieutenant, Lieutenant, Lieutenant),
-    FigureType.SERGEANT -> List(Sergeant, Sergeant, Sergeant, Sergeant),
-    FigureType.MINER -> List(Miner, Miner, Miner, Miner, Miner),
-    FigureType.SCOUT -> List(Scout, Scout, Scout, Scout, Scout, Scout, Scout, Scout),
-    FigureType.SPY -> List(Spy),
-    FigureType.FLAG -> List(Flag),
-  )
   */
 
 }

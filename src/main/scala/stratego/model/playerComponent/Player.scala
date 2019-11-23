@@ -1,7 +1,7 @@
 package stratego.model.playerComponent
 
-import stratego.model.gridComponent.FigureSet
+import scala.stratego.model.gridComponent.FieldType.FieldType
 
-case class Player(name: String, figureSet: FigureSet) {
-  override def toString: String = name;
+case class Player(name: String, fieldType: FieldType) {
+  override def toString: String = name
 }

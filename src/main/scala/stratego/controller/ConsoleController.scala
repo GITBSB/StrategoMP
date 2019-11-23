@@ -27,11 +27,29 @@ class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging{
           + "\n10 ->" + FigureType.SCOUT
           + "\n11 ->" + FigureType.SPY
           + "\n12 ->" + FigureType.FLAG)
-        val inputFigure = scala.io.StdIn.readLine()
+        val inputFigure = scala.io.StdIn.readInt()
         logger.info("\nCoordinates - Input example: B,3")
         val inputCo = scala.io.StdIn.readLine()
         val split = inputCo.split(",")
+        gameEngine.setFigure(convertInputToFigureType(inputFigure), 7, 9) //TODO: row, col
     }
     stopProcessingInput
+  }
+
+  def convertInputToFigureType(number: Int): FigureType.FigureType = {
+    number match {
+      case 1 => FigureType.BOMB
+      case 2 => FigureType.MARSHAL
+      case 3 => FigureType.GENERAL
+      case 4 => FigureType.COLONEL
+      case 5 => FigureType.MAJOR
+      case 6 => FigureType.CAPTAIN
+      case 7 => FigureType.LIEUTENANT
+      case 8 => FigureType.SERGEANT
+      case 9 => FigureType.MINER
+      case 10 => FigureType.SCOUT
+      case 11 => FigureType.SPY
+      case 12 => FigureType.FLAG
+    }
   }
 }

@@ -1,5 +1,7 @@
 package stratego.model.engineComponent
 
+import stratego.model.gridComponent.FigureType.FigureType
+
 import scala.swing.Publisher
 import scala.swing.event.Event
 
@@ -8,7 +10,7 @@ trait GameEngineInterface extends Publisher {
   def gridToString: String
   def getGameStatus: String
   def quitGame:Unit
-
+  def setFigure(figureType: FigureType, row: Int, col: Int):Unit
 
 }
 

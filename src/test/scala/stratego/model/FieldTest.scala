@@ -1,8 +1,8 @@
 package stratego.model
 
 import org.scalatest.{Matchers, WordSpec}
-import stratego.model.gridComponent.{Field, Figure, FigureSet}
 import stratego.model.gridComponent.Figure.Major
+import stratego.model.gridComponent.{Field, Figure}
 import stratego.model.playerComponent.Player
 
 import scala.stratego.model.gridComponent.FieldType
@@ -20,7 +20,7 @@ class FieldTest extends WordSpec with Matchers  {
     }
     "set with a figure" should {
       val field = Field(FieldType.EMPTY_FIELD, None)
-      val withFigure = field.setFigure(new Major(Player("test", new FigureSet())))
+      val withFigure = field.setFigure(new Some(Major(Player("test", FieldType.B_SIDE))))
       "create a new field with the new figure" in {
         withFigure shouldBe a [Field]
         withFigure should not be(field)
