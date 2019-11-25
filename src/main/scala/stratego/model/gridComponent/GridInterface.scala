@@ -7,7 +7,6 @@ trait GridInterface {
 
   def createNewGrid(): GridInterface
   def createPlayableGrid(): GridInterface
-  def field(row: Int, col: Int): FieldInterface
   def size(): Int
   def setFigure(row: Int, col: Int, figure: Option[Figure]): GridInterface
   def getField(row: Int, col: Int): FieldInterface

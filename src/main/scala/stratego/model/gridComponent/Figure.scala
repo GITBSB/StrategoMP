@@ -7,6 +7,7 @@ abstract class Figure(val figureType: FigureType.FigureType, val stringOut: Stri
 }
 
 object Figure {
+
   case class Scout(override val player: Player) extends Figure(FigureType.SCOUT, "[02]",  2, player)
   case class Marshal(override val player: Player) extends Figure(FigureType.MARSHAL, "[10]",  10, player)
   case class General(override val player: Player) extends Figure(FigureType.GENERAL, "[09]",  9, player)
@@ -17,10 +18,7 @@ object Figure {
   case class Sergeant(override val player: Player) extends Figure(FigureType.SERGEANT, "[04]",  4, player)
   case class Miner(override val player: Player) extends Figure(FigureType.MINER, "[M3]",  3, player)
   case class Flag(override val player: Player) extends Figure(FigureType.FLAG, "[FL]",  0, player)
-  case class Spy(override val player: Player) extends Figure(FigureType.SPY, "[Sp]",  1, player)
+  case class Spy(override val player: Player) extends Figure(FigureType.SPY, "[SP]",  1, player)
   case class Bomb(override val player: Player) extends Figure(FigureType.BOMB, "[BO]",  100, player)
 
 }
-
-
-
