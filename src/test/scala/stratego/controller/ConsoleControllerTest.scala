@@ -2,6 +2,6 @@ package stratego.controller
 
 import org.scalatest.WordSpec
 
-class ControllerTest extends WordSpec {
+class ConsoleControllerTest extends WordSpec {
   //TODO
 }
