@@ -5,9 +5,6 @@ import org.scalatest.{Matchers, WordSpec}
 class GameEngineTest extends WordSpec with Matchers{
   "A GameEngine" when {
     "new" should {
-      "have an empty grid" in {
-
-      }
       "have GameStatus NOT_STARTED" in {
 
       }

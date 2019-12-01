@@ -1,27 +1,32 @@
 package stratego.model.engineComponent
 
 import com.google.inject.Inject
-import com.typesafe.scalalogging.LazyLogging
 import stratego.controller.GameStatus._
 import stratego.model.gridComponent.GridInterface
 import stratego.model.playerComponent.Player
+import scala.swing.Publisher
+import scala.swing.event.Event
 
-class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface with LazyLogging  {
-  val playerA: Player = Player("PlayerA")
-  val playerB: Player = Player("PlayerB")
+case object GameStartedEvent extends Event
 
-  var gameStatus: GameStatus = INACTIVE
+class GameEngine @Inject()(var grid: GridInterface,
+                           var playerA: Player = Player("PlayerA"),
+                           var playerB: Player = Player("PlayerB"),
+                           var gameStatus: GameStatus = INACTIVE)
+  extends Publisher
+  //extends GameEngineInterface with LazyLogging TODO: Move IO operations to a higher level component
+  {
 
-  def createNewGrid: Unit = {
-    grid = grid.createNewGrid()
-    gameStatus = NEW_GAME
-
-    printTui
-    // TODO: Not working publish
-    //publish(new GameChanged)
+  def startNewGame(playerA: Player, playerB: Player): Unit = {
+    this.gameStatus = NEW_GAME
+    this.grid = this.grid.createNewGrid
+    this.playerA = playerA
+    this.playerB = playerB
+    publish(GameStartedEvent)
   }
 
-  def quitGame():Unit = {
+
+  def quitGame(): Unit = {
     //publish(new QuitStratego)
   }
 
@@ -30,10 +35,4 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
   def gridToString: String = grid.toString
 
   def getGameStatus: String = gameStatus.toString
-
-  def printTui: Unit = {
-    logger.info("printTui")
-    logger.info(gridToString)
-    logger.info(getGameStatus)
-  }
 }

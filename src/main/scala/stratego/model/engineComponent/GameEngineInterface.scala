@@ -1,7 +1,7 @@
 package stratego.model.engineComponent
 
 trait GameEngineInterface {
-  def createNewGrid: Unit
+  def startNewGame: Unit
   def gridToString: String
   def getGameStatus: String
   def quitGame:Unit
