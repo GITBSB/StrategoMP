@@ -1,13 +1,10 @@
 package stratego.model.gridComponent
 
-import stratego.model.gridComponent.Figure.NoFigure
-import stratego.model.playerComponent.Player
 import scala.stratego.model.gridComponent.{FieldType, Matrix}
 import scala.math.sqrt
-import com.typesafe.scalalogging.LazyLogging
 
-case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
-  def this() = this(new Matrix[Field](10, Field(FieldType.EMPTY_FIELD, NoFigure(Player("Dummy")))))
+case class Grid (matrix: Matrix[Field]) extends GridInterface {
+  def this() = this(new Matrix[Field](10, Field(FieldType.EMPTY_FIELD, None)))
 
   val size: Int = matrix.size
   val sizeRowCol: Int = sqrt(size).toInt
@@ -18,26 +15,26 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
     for {
       row <- 0 until 4
       col <- 0 until 10
-    } newMatrix = newMatrix.replaceField(row, col, Field(FieldType.A_SIDE, NoFigure(Player("Dummy"))))
-
+    } newMatrix = newMatrix.replaceField(row, col, Field(FieldType.A_SIDE, None))
     for {
       row <- 6 until 10
       col <- 0 until 10
-    } newMatrix = newMatrix.replaceField(row, col, Field(FieldType.B_SIDE, NoFigure(Player("Dummy"))))
+    } newMatrix = newMatrix.replaceField(row, col, Field(FieldType.B_SIDE, None))
 
-    copy(newMatrix.replaceField(4, 2, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(4, 3, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(5, 2, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(5, 3, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(4, 6, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(4, 7, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(5, 6, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy"))))
-      .replaceField(5, 7, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))))
+    copy(newMatrix.replaceField(4, 2, Field(FieldType.NO_FIELD, None))
+      .replaceField(4, 3, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 2, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 3, Field(FieldType.NO_FIELD, None))
+      .replaceField(4, 6, Field(FieldType.NO_FIELD, None))
+      .replaceField(4, 7, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 6, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 7, Field(FieldType.NO_FIELD, None)))
   }
 
-  private def fieldAssignment(row: Int, col: Int, grid: GridInterface) = {
-    copy(this.matrix.replaceField(4, 2, Field(FieldType.NO_FIELD, NoFigure(Player("Dummy")))));
-   }
+  def assignField(row: Int, col: Int, figure: Figure): GridInterface= {
+    val field = this.matrix.field(row, col)
+    copy(this.matrix.replaceField(row, col, field.copy(figure = Some(figure))))
+  }
 
   override def toString: String = {
     var stringGrid = "\n"

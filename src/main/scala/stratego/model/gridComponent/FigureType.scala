@@ -14,5 +14,4 @@ object FigureType extends Enumeration {
   val FLAG = Value("Flag")
   val SPY = Value("Spy")
   val BOMB = Value("Bomb")
-  val NOFIGURE = Value("Empty")
 }
