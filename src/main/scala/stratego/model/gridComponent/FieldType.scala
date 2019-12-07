@@ -1,4 +1,4 @@
-package scala.stratego.model.gridComponent
+package stratego.model.gridComponent
 
 object FieldType extends Enumeration {
 

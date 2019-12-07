@@ -1,8 +1,6 @@
 package stratego.model.gridComponent
 
-import stratego.model.gridComponent.Figure.{Bomb, Captain, Colonel, Flag, General, Lieutenant, Major, Marshal, Miner, Scout, Sergeant, Spy}
-
-case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
+case class FigureSet(figures: Map[FigureType.FigureType, Int]) {
  def this() = this(Map(
     FigureType.BOMB -> 6,
     FigureType.MARSHAL -> 1,
@@ -23,30 +21,14 @@ case class FigureSet(val figures: Map[FigureType.FigureType, Int]) {
   }
 
   def addToFigure(figureType: FigureType.FigureType): FigureSet = {
-    var figureSet = this
-    figureSet = copy(figures.updated(figureType, getFigureCount(figureType) + 1))
-    figureSet
+    copy(figures.updated(figureType, getFigureCount(figureType) + 1))
   }
 
   def deleteFromFigure(figureType: FigureType.FigureType): FigureSet = {
-    var figureSet = this
-    figureSet = copy(figures.updated(figureType, getFigureCount(figureType) - 1))
-    figureSet
+    copy(figures.updated(figureType, getFigureCount(figureType) - 1))
   }
 
-  // TODO better?
-  private val figuresL = Map(
-    FigureType.BOMB -> List(Bomb, Bomb, Bomb, Bomb, Bomb, Bomb),
-    FigureType.MARSHAL -> List(Marshal),
-    FigureType.GENERAL -> List(General),
-    FigureType.COLONEL -> List(Colonel, Colonel, Colonel),
-    FigureType.MAJOR -> List(Major, Major, Major),
-    FigureType.CAPTAIN -> List(Captain, Captain, Captain, Captain),
-    FigureType.LIEUTENANT -> List(Lieutenant, Lieutenant, Lieutenant, Lieutenant),
-    FigureType.SERGEANT -> List(Sergeant, Sergeant, Sergeant, Sergeant),
-    FigureType.MINER -> List(Miner, Miner, Miner, Miner, Miner),
-    FigureType.SCOUT -> List(Scout, Scout, Scout, Scout, Scout, Scout, Scout, Scout),
-    FigureType.SPY -> List(Spy),
-    FigureType.FLAG -> List(Flag),
-  )
+  def getFigureCount(): Int = {
+   for (k,v <- figures) {v}
+  }
 }

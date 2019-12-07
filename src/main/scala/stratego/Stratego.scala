@@ -23,7 +23,7 @@ object Stratego {
     while (!stopProcessingInput) {
       if (input.ready()) {
         val line = input.readLine()
-          stopProcessingInput = consoleController.processInputLine(line) //TODO: Propage world state back up instead of having mutable state in GameEngine
+          stopProcessingInput = consoleController.processInputLine(line)
       } else {
         Thread.sleep(199) // don't waste cpu cycles if no input is given
       }

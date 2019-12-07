@@ -1,6 +1,6 @@
 package stratego.model.gridComponent
 
-import scala.stratego.model.gridComponent.{FieldType, Matrix}
+import scala.stratego.model.gridComponent.Matrix
 import scala.math.sqrt
 
 case class Grid (matrix: Matrix[Field]) extends GridInterface {
