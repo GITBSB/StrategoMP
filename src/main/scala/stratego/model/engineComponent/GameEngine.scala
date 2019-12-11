@@ -3,8 +3,9 @@ package stratego.model.engineComponent
 import com.google.inject.Inject
 import com.typesafe.scalalogging.LazyLogging
 import stratego.gameEngine.GameStatus._
+import stratego.model.gridComponent.Figure.{Bomb, Captain, Colonel, Flag, Lieutenant, Major, Marshal, Miner, Scout, Sergeant, Spy}
 import stratego.model.gridComponent.FigureType.FigureType
-import stratego.model.gridComponent.{FigureSet, GridInterface}
+import stratego.model.gridComponent.{Figure, FigureSet, FigureType, GridInterface}
 import stratego.model.playerComponent.Player
 
 import scala.stratego.model.gridComponent.FieldType
@@ -28,10 +29,10 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
 
   def setFigure(figureType: FigureType, row: Int, col: Int):Unit = {
     if(figureSet(activePlayer).getFigureCount(figureType) > 0 && grid.getField(row, col).getFieldType() == activePlayer.fieldType) {
-     if(grid.getField(row, col).getFigure() != None) {
-       val figureSetTmp = figureSet(activePlayer).addFigure(grid.getField(row, col).getFigure().get)
-       figureSet = figureSet.updated(activePlayer, figureSetTmp)
-     }
+      if(grid.getField(row, col).getFigure() != None) {
+        val figureSetTmp = figureSet(activePlayer).addFigure(grid.getField(row, col).getFigure().get)
+        figureSet = figureSet.updated(activePlayer, figureSetTmp)
+      }
       val figureSetTmp = figureSet(activePlayer).removeFigure(figureType)
       figureSet = figureSet.updated(activePlayer, figureSetTmp)
       figureSet(activePlayer).figures.get(figureType).foreach(println)
@@ -63,4 +64,19 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
 
   def getFigureSetActivePlayer: FigureSet = figureSet(activePlayer)
 
+  def resolveFigure(figureName: String): Figure = {
+    FigureType.withName(figureName) match { // Throws an exception if string does not match any FigureType!
+      case FigureType.SCOUT => Scout(activePlayer)
+      case FigureType.MARSHAL => Marshal(activePlayer)
+      case FigureType.COLONEL => Colonel(activePlayer)
+      case FigureType.MAJOR => Major(activePlayer)
+      case FigureType.CAPTAIN => Captain(activePlayer)
+      case FigureType.LIEUTENANT => Lieutenant(activePlayer)
+      case FigureType.SERGEANT => Sergeant(activePlayer)
+      case FigureType.MINER => Miner(activePlayer)
+      case FigureType.FLAG => Flag(activePlayer)
+      case FigureType.SPY => Spy(activePlayer)
+      case FigureType.BOMB => Bomb(activePlayer)
+    }
+  }
 }

@@ -18,25 +18,24 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
   }
 
   def createPlayableGrid(): GridInterface = {
-    var grid = this
+    var newMatrix = matrix
     for {
       row <- 0 until 4
       col <- 0 until 10
-    } grid = copy(grid.matrix.replaceField(row, col, Field(FieldType.A_SIDE, None)))
-
+    } newMatrix = newMatrix.replaceField(row, col, Field(FieldType.A_SIDE, None))
     for {
       row <- 6 until 10
       col <- 0 until 10
-    } grid = copy(grid.matrix.replaceField(row, col, Field(FieldType.B_SIDE, None)))
+    } newMatrix = newMatrix.replaceField(row, col, Field(FieldType.B_SIDE, None))
 
-    grid = copy(grid.matrix.replaceField(4, 2, Field(FieldType.NO_FIELD, None)))
-    grid = copy(grid.matrix.replaceField(4, 3, Field(FieldType.NO_FIELD, None)))
-    grid = copy(grid.matrix.replaceField(5, 2, Field(FieldType.NO_FIELD, None)))
-    grid = copy(grid.matrix.replaceField(5, 3, Field(FieldType.NO_FIELD, None)))
-    grid = copy(grid.matrix.replaceField(4, 6, Field(FieldType.NO_FIELD, None)))
-    grid = copy(grid.matrix.replaceField(4, 7, Field(FieldType.NO_FIELD, None)))
-    grid = copy(grid.matrix.replaceField(5, 6, Field(FieldType.NO_FIELD, None)))
-    copy(grid.matrix.replaceField(5, 7, Field(FieldType.NO_FIELD, None)))
+    copy(newMatrix.replaceField(4, 2, Field(FieldType.NO_FIELD, None))
+      .replaceField(4, 3, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 2, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 3, Field(FieldType.NO_FIELD, None))
+      .replaceField(4, 6, Field(FieldType.NO_FIELD, None))
+      .replaceField(4, 7, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 6, Field(FieldType.NO_FIELD, None))
+      .replaceField(5, 7, Field(FieldType.NO_FIELD, None)))
   }
 
   def getField(row: Int, col: Int): FieldInterface = matrix.field(row, col)
@@ -50,17 +49,15 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface with LazyLogging {
   // private def noFieldAssignment(row: Int, col: Int, grid: GridInterface): GridInterface = {var grid = this; copy(grid.matrix.replaceField(row, col, Field(FieldType.NO_FIELD, None)))}
 
   def toStringTUI(gameStatus: GameStatus, activePlayer: Player): String = {
-  logger.info("gridtostring")
-  var stringGrid = "\n"
-  for {
-    row <- 0 until 10
-    col <- 0 until 10
-  } {
-    stringGrid = stringGrid + getField(row, col).toStringTUI(gameStatus, activePlayer)
-    if (col == 9) stringGrid = stringGrid + " " + row +"\n"
-  }
-  stringGrid += "- A - B - C - D - E - F - G - H - I - J";
-  stringGrid
+    var stringGrid = "\n"
+    for {
+      row <- 0 until 10
+      col <- 0 until 10
+    } {
+      stringGrid = stringGrid + getField(row, col).toStringTUI(gameStatus, activePlayer)
+      if (col == 9) stringGrid = stringGrid + " " + row +"\n"
+    }
+    stringGrid + "- A - B - C - D - E - F - G - H - I - J";
   }
 
 }
