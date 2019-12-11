@@ -1,7 +1,7 @@
 package stratego.model.gridComponent
 
-import stratego.controller.GameStatus
-import stratego.controller.GameStatus.GameStatus
+import stratego.gameEngine.GameStatus
+import stratego.gameEngine.GameStatus.GameStatus
 import stratego.model.playerComponent.Player
 
 import scala.stratego.model.gridComponent.FieldType._

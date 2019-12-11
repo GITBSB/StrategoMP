@@ -1,7 +1,7 @@
 package stratego.model.gridComponent
 
 import org.scalatest.{Matchers, WordSpec}
-import stratego.controller.GameStatus
+import stratego.gameEngine.GameStatus
 import stratego.model.gridComponent.Figure.Major
 import stratego.model.playerComponent.Player
 

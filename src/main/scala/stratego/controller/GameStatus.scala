@@ -1,4 +1,4 @@
-package stratego.controller
+package stratego.gameEngine
 
 object GameStatus extends Enumeration {
 

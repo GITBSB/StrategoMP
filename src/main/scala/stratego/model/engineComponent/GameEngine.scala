@@ -2,7 +2,7 @@ package stratego.model.engineComponent
 
 import com.google.inject.Inject
 import com.typesafe.scalalogging.LazyLogging
-import stratego.controller.GameStatus._
+import stratego.gameEngine.GameStatus._
 import stratego.model.gridComponent.FigureType.FigureType
 import stratego.model.gridComponent.{FigureSet, GridInterface}
 import stratego.model.playerComponent.Player

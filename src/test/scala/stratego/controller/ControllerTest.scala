@@ -1,7 +1,7 @@
-package stratego.controller
+package stratego.gameEngine
 
 import org.scalatest.WordSpec
 
-class ControllerTest extends WordSpec {
+class gameEngineTest extends WordSpec {
   //TODO
 }

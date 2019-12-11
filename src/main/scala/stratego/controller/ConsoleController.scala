@@ -1,11 +1,11 @@
-package stratego.controller
+package stratego.gameEngine
 
 
 import com.typesafe.scalalogging.LazyLogging
 import stratego.model.engineComponent.GameEngineInterface
 import stratego.model.gridComponent.FigureType
 
-class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging{
+class ConsolegameEngine(gameEngine: GameEngineInterface) extends LazyLogging{
   var stopProcessingInput = false
   def processInputLine(input: String): Boolean = {
     input match {
