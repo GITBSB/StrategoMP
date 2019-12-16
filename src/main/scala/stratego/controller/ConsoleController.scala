@@ -3,7 +3,7 @@ package stratego.controller
 
 import com.typesafe.scalalogging.LazyLogging
 import stratego.model.engineComponent.GameEngineInterface
-import stratego.model.gridComponent.FigureType
+import stratego.model.gridComponent.{FieldType, FigureSet, FigureType}
 import stratego.model.playerComponent.Player
 
 class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging{
@@ -12,7 +12,7 @@ class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging{
   def processInputLine(input: String): Boolean = {
     input match {
       case "n" =>
-        gameEngine.startNewGame(Player("PlayerA"), Player("PlayerB"))//TODO: Check how to resolve player names
+        gameEngine.startNewGame(Player("PlayerA", new FigureSet, FieldType.A_SIDE), Player("PlayerB", new FigureSet, FieldType.B_SIDE))//TODO: Check how to resolve player names
       case "q" =>
         gameEngine.quitGame
       case "s" =>
