@@ -8,7 +8,7 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface {
 
   val size: Int = matrix.size
   val sizeRowCol: Int = sqrt(size).toInt
-  def field(row: Int, col: Int): Field = matrix.field(row, col)
+  def field(position: Position): Field = matrix.field(position.row, position.col)
 
   def createPlayableGrid(): GridInterface = {
     var newMatrix = matrix
@@ -31,9 +31,9 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface {
       .replaceField(5, 7, Field(FieldType.NO_FIELD, None)))
   }
 
-  def assignField(row: Int, col: Int, figure: Figure): GridInterface= {
-    val field = this.matrix.field(row, col)
-    copy(this.matrix.replaceField(row, col, field.copy(figure = Some(figure))))
+  def assignField(position: Position, figure: Figure): GridInterface= {
+    val field = this.matrix.field(position.row, position.col)
+    copy(this.matrix.replaceField(position.row, position.col, field.copy(figure = Some(figure))))
   }
 
   override def toString: String = {
@@ -42,7 +42,7 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface {
       row <- 0 until 10
       col <- 0 until 10
     } {
-      stringGrid += field(row, col).toString
+      stringGrid += field(Position(row, col)).toString
       if (col == 9) stringGrid += " " + row +"\n"
     }
     stringGrid + "- A - B - C - D - E - F - G - H - I - J";
