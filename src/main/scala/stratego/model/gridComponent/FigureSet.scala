@@ -1,5 +1,7 @@
 package stratego.model.gridComponent
 
+import stratego.model.gridComponent.FigureType.FigureType
+
 case class FigureSet(figures: Map[FigureType.FigureType, Int]) {
  def this() = this(Map(
     FigureType.BOMB -> 6,
@@ -26,9 +28,5 @@ case class FigureSet(figures: Map[FigureType.FigureType, Int]) {
 
   def deleteFromFigure(figureType: FigureType.FigureType): FigureSet = {
     copy(figures.updated(figureType, getFigureCount(figureType) - 1))
-  }
-
-  def getFigureCount(): Int = {
-   for (k,v <- figures) {v}
   }
 }
