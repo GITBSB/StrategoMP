@@ -1,16 +1,15 @@
 package stratego.model
 
 import org.scalatest.{Matchers, WordSpec}
-import stratego.model.gridComponent.{Field, Figure}
-import stratego.model.gridComponent.Figure.{Major, NoFigure}
+import stratego.model.gridComponent.{Field, FieldType, Figure, FigureSet, FigureType}
+import stratego.model.gridComponent.Figure.Major
 import stratego.model.playerComponent.Player
 
-import scala.stratego.model.gridComponent.FieldType
 
 class FieldTest extends WordSpec with Matchers  {
   "A Filed" when {
     "new" should {
-      val field = Field(FieldType.EMPTY_FIELD, new NoFigure(Player("test")))
+      val field = Field(FieldType.EMPTY_FIELD, None)
       "have a field type" in {
         field.fieldType shouldBe a[FieldType.Value]
       }
@@ -19,12 +18,11 @@ class FieldTest extends WordSpec with Matchers  {
       }
     }
     "set with a figure" should {
-      val field = Field(FieldType.EMPTY_FIELD, new NoFigure(Player("test")))
-      val withFigure = field.setFigure(new Major(Player("test")))
+      val field = Field(FieldType.EMPTY_FIELD, Some(Major(Player("test",new FigureSet, FieldType.A_SIDE))))
       "create a new field with the new figure" in {
-        withFigure shouldBe a [Field]
-        withFigure should not be(field)
-        withFigure.figure shouldBe a [Major]
+        field shouldBe a [Field]
+        field should not be(field)
+        field.figure shouldBe a [Major]
       }
     }
   }
