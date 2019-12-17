@@ -6,4 +6,6 @@ object GameEvent {
   case object GameStartedEvent extends Event
   case object GameQuitEvent extends Event
   case object FigureSetEvent extends Event
+  case object AttackEvent extends Event
+  case object InvalidMoveEvent extends Event
 }

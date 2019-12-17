@@ -31,9 +31,14 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface {
       .replaceField(5, 7, Field(FieldType.NO_FIELD, None)))
   }
 
-  def assignField(position: Position, figure: Figure): GridInterface= {
+  def assignField(position: Position, figure: Option[Figure]): GridInterface= {
     val field = this.matrix.field(position.row, position.col)
-    copy(this.matrix.replaceField(position.row, position.col, field.copy(figure = Some(figure))))
+    copy(this.matrix.replaceField(position.row, position.col, field.copy(figure = figure)))
+  }
+
+  def move(from: Position, to: Position): GridInterface = {
+    val figure = field(from).figure
+    assignField(from, None).assignField(to, figure)
   }
 
   override def toString: String = {
