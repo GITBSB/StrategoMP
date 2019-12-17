@@ -1,5 +1,8 @@
 package stratego.model.gridComponent
 
+import stratego.model.engineComponent.GameState.GameState
+import stratego.model.playerComponent.Player
+
 import scala.stratego.model.gridComponent.Matrix
 import scala.math.sqrt
 
@@ -8,7 +11,12 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface {
 
   val size: Int = matrix.size
   val sizeRowCol: Int = sqrt(size).toInt
-  def field(position: Position): Field = matrix.field(position.row, position.col)
+
+  def getField(position: Position): FieldInterface = matrix.getField(position.row, position.col)
+
+  def createNewGrid(): GridInterface = {
+    new Grid().createPlayableGrid()
+  }
 
   def createPlayableGrid(): GridInterface = {
     var newMatrix = matrix
@@ -32,28 +40,27 @@ case class Grid (matrix: Matrix[Field]) extends GridInterface {
   }
 
   def assignField(position: Position, figure: Option[Figure]): GridInterface= {
-    val field = this.matrix.field(position.row, position.col)
-    copy(this.matrix.replaceField(position.row, position.col, field.copy(figure = figure)))
+    val field = this.matrix.getField(position.row, position.col)
+    copy(this.matrix.replaceField(position.row, position.col, Field(field.getFieldType(), figure)))
   }
 
   def move(from: Position, to: Position): GridInterface = {
-    val figure = field(from).figure
+    val figure = getField(from).getFigure()
     assignField(from, None).assignField(to, figure)
   }
 
-  override def toString: String = {
+  // private def noFieldAssignment(row: Int, col: Int, grid: GridInterface): GridInterface = {var grid = this; copy(grid.matrix.replaceField(row, col, Field(FieldType.NO_FIELD, None)))}
+
+  def toStringTUI(gameState: GameState, activePlayer: Player): String = {
     var stringGrid = "\n"
     for {
       row <- 0 until 10
       col <- 0 until 10
     } {
-      stringGrid += field(Position(row, col)).toString
+      stringGrid += getField(Position(row, col)).toStringTUI(gameState, activePlayer)
       if (col == 9) stringGrid += " " + row +"\n"
     }
     stringGrid + "- A - B - C - D - E - F - G - H - I - J";
   }
 
-  def createNewGrid(): GridInterface = {
-    new Grid().createPlayableGrid()
-  }
 }

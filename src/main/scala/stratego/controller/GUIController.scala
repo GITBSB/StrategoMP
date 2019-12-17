@@ -1,5 +1,5 @@
-package stratego.controller
+package stratego.gameEngine
 
-class GUIController {
+class GUIgameEngine {
 
 }

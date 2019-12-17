@@ -1,28 +1,40 @@
-package stratego.model
+package stratego.model.gridComponent
 
 import org.scalatest.{Matchers, WordSpec}
-import stratego.model.gridComponent.{Field, FieldType, Figure, FigureSet, FigureType}
+import stratego.model.engineComponent.GameState
 import stratego.model.gridComponent.Figure.Major
 import stratego.model.playerComponent.Player
 
 
-class FieldTest extends WordSpec with Matchers  {
-  "A Filed" when {
+class FieldTest extends WordSpec with Matchers{
+  "A Field" when {
     "new" should {
       val field = Field(FieldType.EMPTY_FIELD, None)
       "have a field type" in {
         field.fieldType shouldBe a[FieldType.Value]
       }
       "have a figure" in {
-        field.figure shouldBe a[Figure]
+        field.figure shouldBe None
       }
     }
     "set with a figure" should {
-      val field = Field(FieldType.EMPTY_FIELD, Some(Major(Player("test",new FigureSet, FieldType.A_SIDE))))
+      val field = Field(FieldType.B_SIDE, None)
+      val player = Player("TestPlayer", FieldType.B_SIDE)
+      val figure: Option[Figure] = Some(Major(player))
+      val fieldWithFigure = field.setFigure(figure)
       "create a new field with the new figure" in {
-        field shouldBe a [Field]
-        field should not be(field)
-        field.figure shouldBe a [Major]
+        fieldWithFigure shouldBe a [Field]
+        fieldWithFigure should not be(field)
+        fieldWithFigure.getFigure.get shouldBe a [Major]
+      }
+      "has a FieldType" in {
+        fieldWithFigure.getFieldType() should be (FieldType.B_SIDE)
+      }
+      "has a String representation" in {
+        field.toStringTUI(GameState.NEW_GAME, player) should be (FieldType.B_SIDE.toString)
+        fieldWithFigure.toStringTUI(GameState.END, player) should be (figure.get.toString)
+        fieldWithFigure.toStringTUI(GameState.NEW_GAME, Player("TestPlayerB", FieldType.A_SIDE)) should be ("[??]")
+        fieldWithFigure.toStringTUI(GameState.NEW_GAME, player) should be (figure.get.toString)
       }
     }
   }

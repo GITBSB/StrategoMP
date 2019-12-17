@@ -1,4 +1,4 @@
-package stratego.model.engineComponent
+package stratego.gameEngine
 
 object GameStatus extends Enumeration {
     type GameStatus = Value

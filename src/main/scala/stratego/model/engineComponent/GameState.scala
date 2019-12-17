@@ -10,5 +10,4 @@ object GameState extends Enumeration {
   val FIGHT = Value("Fight")
   val END = Value("End of the game")
   val PLAYER_CHANGE = Value("Player change")
-
 }
