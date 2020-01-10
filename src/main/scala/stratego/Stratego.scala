@@ -6,6 +6,7 @@ import com.google.inject.{Guice, Injector}
 import stratego.gameEngine.ConsoleController
 import stratego.model.engineComponent.GameEngineInterface
 import stratego.view.Tui
+import stratego.view.gui.StrategoFrame
 
 object Stratego {
 
@@ -13,6 +14,7 @@ object Stratego {
   val gameEngine: GameEngineInterface = injector.getInstance(classOf[GameEngineInterface])
   val tui: Tui = new Tui(gameEngine)
   val consoleController = new ConsoleController(gameEngine)
+  new StrategoFrame(gameEngine)
 
   def main(args: Array[String]): Unit = {
     processInput(new BufferedReader(Console.in), consoleController)
