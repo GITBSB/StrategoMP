@@ -5,6 +5,7 @@ import java.awt.{Color, Image}
 
 import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, WindowConstants}
+import stratego.gameEngine.GameStatus
 import stratego.model.engineComponent.{GameChanged, GameEngineInterface, GameQuit}
 import stratego.model.gridComponent.FigureType
 
@@ -17,8 +18,10 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   title = "Stratego"
   preferredSize = new Dimension(800, 800)
 
-  var fieldPanels = Array.ofDim[Button](10, 10)
-
+  var fieldButtons = Array.ofDim[FieldButton](10, 10)
+  var figureButtons = scala.collection.mutable.ListBuffer.empty[Button]
+  var selectedFigureButton: AbstractButton = null
+  var fieldButtonSelect: FieldButton = null
 
   override def closeOperation(): Unit = gameEngine.quitGame
   peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
@@ -45,7 +48,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   }
 
   def gridPanel:Panel = new GridPanel(10, 10) {
-
     val originalImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
     val resizedImage = originalImage.getScaledInstance(700, 700, Image.SCALE_DEFAULT)
 
@@ -60,18 +62,39 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
       x <- 0 until 10
       y <- 0 until 10
     } {
-      val fieldButton = new FieldButton(x, y)
+      val fieldButton: FieldButton = new FieldButton(x, y)
+      fieldButtons(x)(y) = fieldButton
 
-      fieldPanels(x)(y) = fieldButton
+      // not working why?
+      if((x == 4 || x == 5) && (y == 2 || y == 3 || y == 6|| y == 7)) {
+        fieldButtons(x)(y).enabled = false
+      }
       contents += fieldButton
       listenTo(fieldButton)
     }
+
     reactions += {
       case event: ButtonClicked => {
-        println("Button " + event.source.getClass)
-        event.source.border = BorderFactory.createMatteBorder(
-          1, 1, 1, 1, Color.green)
-        event.source.asInstanceOf[FieldButton].setImage("[AA]")
+        val selectedFieldButton: FieldButton = event.source.asInstanceOf[FieldButton]
+
+        if(true) { // gameEngine.getGameStatus == GameStatus.SET_FIGURES
+          if(selectedFigureButton.name == "Delete") {
+            // TODO: needs method to delete in GameEngine
+            // update all
+            updateFigureButtons
+          } else {
+            val isSet = gameEngine.setFigure(FigureType.withName(selectedFigureButton.name), selectedFieldButton.row, selectedFieldButton.column)
+            if(isSet) {
+              updateFigureButtons
+              selectedFieldButton.setImage(selectedFigureButton.name)
+            }
+          }
+
+        } else if(gameEngine.getGameStatus == GameStatus.FIGHT) //gameEngine.getGameStatus == GameStatus.FIGHT
+          if (fieldButtonSelect != null) {
+            fieldButtonSelect.border =  selectedFieldButton.border
+            selectedFieldButton.border = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder())
+          }
       }
     }
   }
@@ -79,7 +102,8 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   def figurePanel = new GridPanel(0,1) {
     val deleteButton = new Button {
       preferredSize_=(new Dimension(80, 100))
-      text = "Delete"
+      name = "Delete"
+      text = name
       foreground = Color.BLACK
       opaque = false
       contentAreaFilled = false
@@ -90,12 +114,16 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
       val figureButton = new Button {
         preferredSize_=(new Dimension(80, 100))
         icon_=(new StretchIcon(getClass.getResource("/StrategoImages/" + e + ".jpg")))
-        text = "1"
+        name = e.toString
+        text = gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(name)).toString
         foreground = Color.BLACK
-        horizontalAlignment = Alignment.Right
+        background = Color.LIGHT_GRAY
+        border = BorderFactory.createEmptyBorder(2, 2, 2,2)
+        horizontalAlignment = Alignment.Left
         opaque = false
         contentAreaFilled = false
       }
+      figureButtons += figureButton
       listenTo(figureButton)
       contents += figureButton
     }
@@ -103,45 +131,53 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
     reactions += {
       case event: ButtonClicked => {
-        event.source.foreground = (Color.BLUE);
-        event.source.border = BorderFactory.createMatteBorder(
-          1, 1, 1, 1, Color.green)
+        if(selectedFigureButton != null) {
+          selectedFigureButton.border = BorderFactory.createEmptyBorder(2, 2, 2,2)
+          selectedFigureButton.opaque = false
+        }
+        selectedFigureButton = event.source
+        event.source.opaque = true
+        event.source.border = BorderFactory.createRaisedBevelBorder()
+        println(selectedFigureButton.name)
+        if(event.source.text == "Delete") {
+
+        } else {
+
+        }
       }
     }
-
   }
-
 
 
   val statusline = new TextField(gameEngine.getGameStatus, 20)
-  val fieldButton1 = new Button {
-    preferredSize_=(new Dimension(50,50))
-    name = "Hello"
-  }
-  listenTo(fieldButton1)
 
   contents = new BorderPanel {
     add(gridPanel, BorderPanel.Position.Center)
-    add(fieldButton1, BorderPanel.Position.South)
+    add(statusline, BorderPanel.Position.South)
     add(figurePanel, BorderPanel.Position.East)
   }
 
 
   resizable = false
   visible = true
-  updateFieldPanels
+  updateFieldButtons
 
   reactions += {
-    case event: GameChanged => updateFieldPanels
+    case event: GameChanged => updateFieldButtons
     case event: GameQuit => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
   }
 
+  def updateFigureButtons = {
+    for(button <- figureButtons) {
+       button.text = gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(button.name)).toString
+    }
+  }
 
-  def updateFieldPanels = {
+  def updateFieldButtons = {
     for {
       x <- 0 until 10
       y <- 0 until 10
-    } fieldPanels(x)(y)
+    } fieldButtons(x)(y)
     //statusline.text = gameEngine.statusText
     repaint
   }

@@ -13,7 +13,7 @@ trait GameEngineInterface extends Publisher {
   def quitGame:Unit
   def startBattle: Unit
   def changePlayer:Unit
-  def setFigure(figureType: FigureType, row: Int, col: Int):Unit
+  def setFigure(figureType: FigureType, row: Int, col: Int):Boolean
   def getFigureSetActivePlayer: FigureSet
 
 }

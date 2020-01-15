@@ -18,3 +18,9 @@ object FigureType extends Enumeration {
 
 for (e <- FigureType.values) println(e)
 
+def getFigureCount(figureType: FigureType.FigureType) = println("yeeesss")
+
+for(e <- FigureType.values) getFigureCount(FigureType.withName(e.toString))
+
+
+

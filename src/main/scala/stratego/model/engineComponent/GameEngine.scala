@@ -27,7 +27,7 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
     publish(new GameQuit)
   }
 
-  def setFigure(figureType: FigureType, row: Int, col: Int):Unit = {
+  def setFigure(figureType: FigureType, row: Int, col: Int):Boolean = {
     if(figureSet(activePlayer).getFigureCount(figureType) > 0 && grid.getField(row, col).getFieldType() == activePlayer.fieldType) {
       if(grid.getField(row, col).getFigure() != None) {
         val figureSetTmp = figureSet(activePlayer).addFigure(grid.getField(row, col).getFigure().get)
@@ -38,12 +38,14 @@ class GameEngine @Inject()(var grid: GridInterface) extends GameEngineInterface 
       figureSet(activePlayer).figures.get(figureType).foreach(println)
       grid = grid.setFigure(row, col, figureSet(activePlayer).getLastFigure())
 
+      gameStatus = SET_FIGURES
+      publish(new GameChanged)
+      true
     }else {
       // TODO statusline
       logger.info("Not enough figures of " + figureType + " left to place!")
+      false
     }
-    gameStatus = SET_FIGURES
-    publish(new GameChanged)
   }
 
   def startBattle: Unit = {

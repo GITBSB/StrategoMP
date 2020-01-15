@@ -6,7 +6,7 @@ import javax.swing.ImageIcon
 
 import scala.swing.{Button, Dimension}
 
-class FieldButton (row: Int, column: Int) extends Button{
+class FieldButton (val row: Int, val column: Int) extends Button{
   preferredSize_=(new Dimension(50, 50))
   icon_=(new ImageIcon(new BufferedImage(50, 50, BufferedImage.TYPE_INT_ARGB)))
   opaque = false
