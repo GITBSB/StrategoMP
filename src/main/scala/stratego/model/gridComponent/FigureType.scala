@@ -2,7 +2,7 @@ package stratego.model.gridComponent
 
 object FigureType extends Enumeration {
   type FigureType = Value
-  val SCOUT = Value("Scout")
+  val BOMB = Value("Bomb")
   val MARSHAL = Value("Marshal")
   val GENERAL = Value("General")
   val COLONEL = Value("Colonel")
@@ -11,7 +11,7 @@ object FigureType extends Enumeration {
   val LIEUTENANT = Value("Lieutenant")
   val SERGEANT = Value("Sergeant")
   val MINER = Value("Miner")
-  val FLAG = Value("Flag")
+  val SCOUT = Value("Scout")
   val SPY = Value("Spy")
-  val BOMB = Value("Bomb")
+  val FLAG = Value("Flag")
 }

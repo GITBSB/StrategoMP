@@ -1,7 +1,20 @@
-import scala.util.matching.Regex
 
-val pa : Regex = ("[A-J],[1-9]").r
 
-"B,33".matches("[A-J],[1-9]")
-"A.2".matches("[A-J],[1-9]")
-'D' - 'A'
+object FigureType extends Enumeration {
+  type FigureType = Value
+  val SCOUT = Value("Scout")
+  val MARSHAL = Value("Marshal")
+  val GENERAL = Value("General")
+  val COLONEL = Value("Colonel")
+  val MAJOR = Value("Major")
+  val CAPTAIN = Value("Captain")
+  val LIEUTENANT = Value("Lieutenant")
+  val SERGEANT = Value("Sergeant")
+  val MINER = Value("Miner")
+  val FLAG = Value("Flag")
+  val SPY = Value("Spy")
+  val BOMB = Value("Bomb")
+}
+
+for (e <- FigureType.values) println(e)
+
