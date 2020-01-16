@@ -82,8 +82,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
             if (selectedFigureButton.get.name == "Delete") {
               // TODO: needs method to delete in GameEngine
               publish(FigureDeletedEvent())
-
-
+              
             } else {
               gameEngine.setFigure(FigureType.withName(selectedFigureButton.get.name), Position(selectedFieldButton.row, selectedFieldButton.column))
               if (gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
@@ -91,12 +90,13 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
               }
             }
           }
-        } else if(gameEngine.getGameState == GameState.FIGHT) //gameEngine.getGameStatus == GameStatus.FIGHT
+        } else if(gameEngine.getGameState == GameState.FIGHT)
           if (fieldButtonSelect.isDefined) {
             fieldButtonSelect.get.border =  selectedFieldButton.border
+            gameEngine.moveFigure(Position(fieldButtonSelect.asInstanceOf[FieldButton].row, fieldButtonSelect.asInstanceOf[FieldButton].column), Position(selectedFieldButton.row, selectedFieldButton.column))
+            fieldButtonSelect = None
+          } else {
             selectedFieldButton.border = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder())
-            // TODO: implement fight
-
           }
       }
     }
