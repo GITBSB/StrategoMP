@@ -36,7 +36,7 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
   def setFigure(figureType: FigureType, position: Position): GameEngineInterface = {
     var newGrid = this.grid
     var newGameState = SET_FIGURES
-    var newStatusLine = this.statusLine
+    var newStatusLine = FIGURE_SET
     var newFigureSet = this.figureSet
     val inactivePlayer = if (activePlayer == playerA) playerA else playerB
 
