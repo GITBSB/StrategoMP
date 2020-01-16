@@ -1,13 +1,15 @@
 package stratego.view.gui
 
 import java.awt.event.WindowEvent
+import java.awt.image.BufferedImage
 import java.awt.{Color, Image}
+import java.net.URL
 
 import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, WindowConstants}
 import stratego.gameEngine.GameStatus
-import stratego.model.engineComponent.{GameEngineInterface, GameQuit, GameStarted}
-import stratego.model.gridComponent.FigureType
+import stratego.model.engineComponent.{GameEngineInterface, GameQuit, GameStartedEvent, GameState}
+import stratego.model.gridComponent.{FigureType, Position}
 
 import scala.swing.Swing.LineBorder
 import scala.swing.event._
@@ -31,7 +33,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     contents += new Menu("Game") {
       mnemonic = Key.F
       contents += new MenuItem(Action("New") {
-        gameEngine.createNewGrid
+        gameEngine.startNewGame
         mnemonic = Key.N
       })
       contents += new MenuItem(Action("Quit") {
@@ -48,7 +50,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   }
 
   def gridPanel:Panel = new GridPanel(10, 10) {
-    val originalImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
+    val originalImage: BufferedImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
     val resizedImage = originalImage.getScaledInstance(700, 700, Image.SCALE_DEFAULT)
 
     override def paintComponent(g: Graphics2D): Unit = {
@@ -76,20 +78,20 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
       case event: ButtonClicked => {
         val selectedFieldButton: FieldButton = event.source.asInstanceOf[FieldButton]
 
-        if(gameEngine.getGameStatus == GameStatus.SET_FIGURES) {
+        if(gameEngine.getGameState == GameState.SET_FIGURES) {
             if(selectedFigureButton.name == "Delete") {
             // TODO: needs method to delete in GameEngine
             // update all
             updateFigureButtons
           } else {
-            val isSet = gameEngine.setFigure(FigureType.withName(selectedFigureButton.name), selectedFieldButton.row, selectedFieldButton.column)
-            if(isSet) {
+            gameEngine.setFigure(FigureType.withName(selectedFigureButton.name), Position(selectedFieldButton.row, selectedFieldButton.column))
+            if(gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
               updateFigureButtons
               selectedFieldButton.setImage(selectedFigureButton.name + "_" + gameEngine.getActivePlayer.name)
             }
           }
 
-        } else if(gameEngine.getGameStatus == GameStatus.FIGHT) //gameEngine.getGameStatus == GameStatus.FIGHT
+        } else if(gameEngine.getGameState == GameState.FIGHT) //gameEngine.getGameStatus == GameStatus.FIGHT
           if (fieldButtonSelect != null) {
             fieldButtonSelect.border =  selectedFieldButton.border
             selectedFieldButton.border = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder())
@@ -143,7 +145,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   }
 
 
-  val statusline = new TextField(gameEngine.getGameStatus.toString, 20)
+  val statusline = new TextField(gameEngine.getStatusLine.toString, 20)
 
   contents = new BorderPanel {
     add(gridPanel, BorderPanel.Position.Center)
@@ -156,7 +158,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   visible = true
 
   reactions += {
-    case event: GameStarted => {
+    case event: GameStartedEvent => {
       clearField
       updateFigureButtons }
     case event: GameQuit => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
