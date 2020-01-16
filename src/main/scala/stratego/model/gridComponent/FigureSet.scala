@@ -20,22 +20,21 @@ case class FigureSet(figures: Map[FigureType.FigureType, List[Figure]], lastFigu
  ), None)
 
   def removeFigure(figureType: FigureType.FigureType): FigureSet = {
-    var figureSet = this
     var figureList = figures.get(figureType).get
     val lastFigure = figureList.head
     figureList = figureList diff List(lastFigure)
-    figureSet = copy(figures.updated(figureType, figureList), Some(lastFigure))
-    figureSet
+    copy(figures.updated(figureType, figureList), Some(lastFigure))
   }
 
   def addFigure(figure: Figure): FigureSet = {
-    var figureSet = this
     val figureList = figure :: figures.get(figure.figureType).get
-    figureSet = copy(figures.updated(figure.figureType, figureList), Some(figure))
-    figureSet
+    copy(figures.updated(figure.figureType, figureList), Some(figure))
   }
 
   def getFigureCount(figureType: FigureType.FigureType): Int = figures.get(figureType).get.size
 
   def getLastFigure(): Option[Figure] = lastFigure
+
+  def noFiguresLeft(): Boolean = figures.values.foldLeft(0)((prev, next) => prev + next.size) == 0
+
 }

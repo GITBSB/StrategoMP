@@ -8,14 +8,14 @@ import stratego.model.gridComponent.{FigureType, Grid, Position}
 class GameEngineTest extends WordSpec with Matchers{
   "A GameEngine" when {
     "new" should {
+      val gameEngine = GameEngine()
       "have GameStatus NOT_STARTED" in {
-
-      }
-      "have two players" in {
-
+         gameEngine.gameState shouldEqual GameState.NOT_STARTED
       }
     }
     "started" should {
+      val gameEngine = GameEngine()
+      val newGame = gameEngine.startNewGame()
       "setup a new game" in {
 
       }
@@ -44,13 +44,13 @@ class GameEngineTest extends WordSpec with Matchers{
 
     }
     "moving a figure" should {
-     val engine = new GameEngine(new Grid().createPlayableGrid(), GameState.FIGHT)
+     val engine = GameEngine(Grid().createPlayableGrid(), GameState.FIGHT)
       val figureType = FigureType.values.find(_.toString == "Scout")
       engine.setFigure(figureType.get, Position(1,1))
       "set this figure to the new field" in {
         engine.moveFigure(Position(1,1), Position(1,2))
         engine.getFigure(Position(1,2)).get should matchPattern { case Scout(_) => }
-        engine.statusLine shouldEqual(GameStatus.IDLE)
+        engine.statusLine shouldEqual GameStatus.IDLE
       }
     }
   }

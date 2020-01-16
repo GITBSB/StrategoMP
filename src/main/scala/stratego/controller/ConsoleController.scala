@@ -1,48 +1,41 @@
 package stratego.gameEngine
 
 import com.typesafe.scalalogging.LazyLogging
-import stratego.model.engineComponent.GameEngineInterface
+import stratego.model.engineComponent.{GameEngineInterface, GameEngineProxy}
 import stratego.model.gridComponent.{FigureType, Position}
 
-class ConsoleController(gameEngine: GameEngineInterface) extends LazyLogging {
-  var stopProcessingInput = false
+class ConsoleController(var gameEngine: GameEngineInterface) extends LazyLogging {
   def processInputLine(input: String): Boolean = {
-    input match {
+    var continueProcessing = true
+    val values: Array[String] = input.split(" ")
+
+    values(0) match {
       case "n" =>
         gameEngine.startNewGame
       case "q" =>
-        stopProcessingInput = true
+        continueProcessing = false
         gameEngine.quitGame
       case "c" =>
         gameEngine.changePlayer
       case "b" =>
         gameEngine.startBattle
       case "s" =>
-        logger.info("\nChose which figure to place on field:\n"
-          + "\n1 ->" + FigureType.BOMB + " | " +  gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.BOMB)
-          + "\n2 ->" + FigureType.MARSHAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MARSHAL)
-          + "\n3 ->" + FigureType.GENERAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.GENERAL)
-          + "\n4 ->" + FigureType.COLONEL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.COLONEL)
-          + "\n5 ->" + FigureType.MAJOR + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MAJOR)
-          + "\n6 ->" + FigureType.CAPTAIN + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.CAPTAIN)
-          + "\n7 ->" + FigureType.LIEUTENANT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.LIEUTENANT)
-          + "\n8 ->" + FigureType.SERGEANT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SERGEANT)
-          + "\n9 ->" + FigureType.MINER + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MINER)
-          + "\n10 ->" + FigureType.SCOUT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SCOUT)
-          + "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY)
-          + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG))
-        val inputFigure = scala.io.StdIn.readInt()
-        var boolReadLine = true
-        var inputCo = "None"
-        while(boolReadLine) {
-          logger.info("\nCoordinates - Input example: B,3")
-          inputCo = scala.io.StdIn.readLine()
-          if(inputCo.matches("[A-J],[0-9]")) boolReadLine = false
-        }
-        val split = inputCo.split(",")
-        gameEngine.setFigure(convertInputToFigureType(inputFigure), Position(split(1).toInt, split(0).head - 'A'))
+        //inputCordinates.matches("[A-J],[0-9]")//TODO: First values is currently also an int for grid Position/Field
+        val split = values(2).split(",")
+        gameEngine.setFigure(convertInputToFigureType(values(1).toInt), Position(split(1).toInt, split(0).toInt))
+      case "m" =>
+        //inputCordinates.matches("[A-J],[0-9]")//TODO: First values is currently also an int for grid Position/Field
+        val from = values(1).split(",")
+        val fromRow = from(0).toInt
+        val fromCol = from(1).toInt
+        val to = values(2).split(",")
+        val toRow = to(0).toInt
+        val toCol = to(1).toInt
+        gameEngine.moveFigure(Position(fromRow, fromCol),Position(toRow, toCol))
+      case _ =>
+        // Handle unknown input
     }
-    stopProcessingInput
+    continueProcessing
   }
 
   def convertInputToFigureType(number: Int): FigureType.FigureType = {

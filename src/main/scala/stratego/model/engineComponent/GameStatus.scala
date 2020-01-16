@@ -9,4 +9,5 @@ object GameStatus extends Enumeration {
     val NO_VALID_FIGURE = Value("Keine valide Figur für einen Zug gefunden")
     val PLAYERA_WINS = Value("Spieler A gewinnt")
     val PLAYERB_WINS = Value("Spieler B gewinnt")
+    val MOVE_FIGURE = Value("Player ... moves figure ... to field ...") //TODO: Pass missing arguments
 }

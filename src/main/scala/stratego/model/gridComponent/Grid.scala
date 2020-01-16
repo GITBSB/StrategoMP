@@ -2,20 +2,17 @@ package stratego.model.gridComponent
 
 import stratego.model.engineComponent.GameState.GameState
 import stratego.model.playerComponent.Player
-
 import scala.stratego.model.gridComponent.Matrix
 import scala.math.sqrt
 
-case class Grid (matrix: Matrix[Field]) extends GridInterface {
-  def this() = this(new Matrix[Field](10, Field(FieldType.EMPTY_FIELD, None)))
-
+case class Grid (matrix: Matrix[Field] = new Matrix[Field](10, Field(FieldType.EMPTY_FIELD, None))) extends GridInterface {
   val size: Int = matrix.size
   val sizeRowCol: Int = sqrt(size).toInt
 
   def getField(position: Position): FieldInterface = matrix.getField(position.row, position.col)
 
   def createNewGrid(): GridInterface = {
-    new Grid().createPlayableGrid()
+    Grid().createPlayableGrid()
   }
 
   def createPlayableGrid(): GridInterface = {

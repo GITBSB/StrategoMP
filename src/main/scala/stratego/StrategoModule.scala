@@ -7,7 +7,7 @@ import stratego.model.gridComponent.{Grid, GridInterface}
 
 class StrategoModule extends AbstractModule with ScalaModule {
   override def configure(): Unit = {
-    bind[GridInterface].to[Grid]
-    bind[GameEngineInterface].to[GameEngine]
+   // bind[GridInterface].to[Grid]
+   // bind[GameEngineInterface].to[GameEngine]
   }
 }
