@@ -2,10 +2,10 @@ package stratego
 
 import java.io.BufferedReader
 
-import com.google.inject.{Guice, Injector}
 import stratego.gameEngine.ConsoleController
-import stratego.model.engineComponent.{GameEngine, GameEngineInterface, GameEngineProxy}
+import stratego.model.engineComponent.{GameEngine, GameEngineProxy}
 import stratego.view.ConsoleView
+import stratego.view.gui.StrategoFrame
 
 object Stratego {
 
@@ -14,6 +14,7 @@ object Stratego {
   val gameEngineProxy = new GameEngineProxy(gameEngine)
   val consoleView: ConsoleView = new ConsoleView(gameEngineProxy)
   val consoleController = new ConsoleController(gameEngineProxy)
+  new StrategoFrame(gameEngineProxy)
   consoleView.printMenu
 
   def main(args: Array[String]): Unit = {
