@@ -3,7 +3,6 @@ package stratego.view.gui
 import java.awt.event.WindowEvent
 import java.awt.image.BufferedImage
 import java.awt.{Color, Image}
-import java.net.URL
 
 import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, WindowConstants}
@@ -22,8 +21,8 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   var fieldButtons = Array.ofDim[FieldButton](10, 10)
   var figureButtons = scala.collection.mutable.ListBuffer.empty[Button]
-  var selectedFigureButton: AbstractButton = null
-  var fieldButtonSelect: FieldButton = null
+  var selectedFigureButton: Option[AbstractButton] = None
+  var fieldButtonSelect: Option[FieldButton] = None
 
   override def closeOperation(): Unit = gameEngine.quitGame
   peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
@@ -79,21 +78,22 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
         val selectedFieldButton: FieldButton = event.source.asInstanceOf[FieldButton]
 
         if(gameEngine.getGameState == GameState.SET_FIGURES) {
-            if(selectedFigureButton.name == "Delete") {
-            // TODO: needs method to delete in GameEngine
-            // update all
-            updateFigureButtons
-          } else {
-            gameEngine.setFigure(FigureType.withName(selectedFigureButton.name), Position(selectedFieldButton.row, selectedFieldButton.column))
-            if(gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
+          if (selectedFigureButton.isDefined) {
+            if (selectedFigureButton.get.name == "Delete") {
+              // TODO: needs method to delete in GameEngine
+              // update all
               updateFigureButtons
-              selectedFieldButton.setImage(selectedFigureButton.name + "_" + gameEngine.getActivePlayer.name)
+            } else {
+              gameEngine.setFigure(FigureType.withName(selectedFigureButton.get.name), Position(selectedFieldButton.row, selectedFieldButton.column))
+              if (gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
+                updateFigureButtons
+                selectedFieldButton.setImage(selectedFigureButton.get.name + "_" + gameEngine.getActivePlayer.name)
+              }
             }
           }
-
         } else if(gameEngine.getGameState == GameState.FIGHT) //gameEngine.getGameStatus == GameStatus.FIGHT
-          if (fieldButtonSelect != null) {
-            fieldButtonSelect.border =  selectedFieldButton.border
+          if (fieldButtonSelect.isDefined) {
+            fieldButtonSelect.get.border =  selectedFieldButton.border
             selectedFieldButton.border = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder())
             // TODO: implement fight
 
@@ -133,11 +133,11 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
     reactions += {
       case event: ButtonClicked => {
-        if(selectedFigureButton != null) {
-          selectedFigureButton.border = BorderFactory.createEmptyBorder(2, 2, 2,2)
-          selectedFigureButton.opaque = false
+        if(selectedFigureButton.isDefined) {
+          selectedFigureButton.get.border = BorderFactory.createEmptyBorder(2, 2, 2,2)
+          selectedFigureButton.get.opaque = false
         }
-        selectedFigureButton = event.source
+        selectedFigureButton = Some(event.source)
         event.source.opaque = true
         event.source.border = BorderFactory.createRaisedBevelBorder()
       }
