@@ -165,6 +165,8 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
 
   def gridToString: String = grid.toStringTUI(gameState, activePlayer) //TODO: When time refactor these toStringTUI methods
 
+  def getFieldStringGUI(position:Position): String = grid.getField(position).toStringGUI(gameState, activePlayer)
+
   def getFigure(position: Position): Option[Figure] = this.grid.getField(position).getFigure
 
   def getFigureSetActivePlayer: FigureSet = figureSet(activePlayer)

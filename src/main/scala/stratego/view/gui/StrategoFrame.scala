@@ -7,7 +7,7 @@ import java.awt.{Color, Image}
 import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, WindowConstants}
 import stratego.gameEngine.GameStatus
-import stratego.model.engineComponent.{GameEngineInterface, GameQuit, GameStartedEvent, GameState}
+import stratego.model.engineComponent._
 import stratego.model.gridComponent.{FigureType, Position}
 
 import scala.swing.Swing.LineBorder
@@ -81,13 +81,13 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
           if (selectedFigureButton.isDefined) {
             if (selectedFigureButton.get.name == "Delete") {
               // TODO: needs method to delete in GameEngine
-              // update all
-              updateFigureButtons
+              publish(FigureDeletedEvent())
+
+
             } else {
               gameEngine.setFigure(FigureType.withName(selectedFigureButton.get.name), Position(selectedFieldButton.row, selectedFieldButton.column))
               if (gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
-                updateFigureButtons
-                selectedFieldButton.setImage(selectedFigureButton.get.name + "_" + gameEngine.getActivePlayer.name)
+                publish(FigureSetEvent())
               }
             }
           }
@@ -153,15 +153,15 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     add(figurePanel, BorderPanel.Position.East)
   }
 
-
   resizable = false
   visible = true
 
   reactions += {
-    case event: GameStartedEvent => {
-      clearField
-      updateFigureButtons }
     case event: GameQuit => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
+    case event: GameStartedEvent => clearField; updateFieldButtons
+    case event: FigureSetEvent => updateFieldButtons; updateFigureButtons
+    case event: MoveFigureEvent => updateStatusLine; updateFieldButtons
+    case event: FigureDeletedEvent => updateStatusLine; updateFieldButtons; updateFigureButtons
   }
 
 
@@ -170,6 +170,21 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
       x <- 0 until 10
       y <- 0 until 10
     } fieldButtons(x)(y).clearImage
+  }
+
+  def updateStatusLine(): Unit = {
+    statusline.text = gameEngine.getStatusLine.toString
+  }
+
+  def updateFieldButtons(): Unit = {
+    for {
+      x <- 0 until 10
+      y <- 0 until 10
+    } {
+      val stringId = gameEngine.getFieldStringGUI(Position(x, y))
+      if(stringId == "") fieldButtons(x)(y).clearImage
+      else  fieldButtons(x)(y).setImage(stringId)
+    }
   }
 
   def updateFigureButtons = {
