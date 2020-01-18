@@ -30,9 +30,7 @@ class ConsoleView extends LazyLogging with Reactor {
     logger.info("New game started:\n")
     printGrid(gameEngine)
     logger.info("Player " + gameEngine.getActivePlayer.toString + " starts")
-    printFigureSet(gameEngine)
-    logger.info("\nOptions:"
-      + "\n\"s [n] [a,b]\": Set a figure[n] to field[a,b] - Example: 's 2 B,3'")
+    printSetFigureSelection(gameEngine)
   }
 
   def printFigureSetResult(gameEngine: GameEngineInterface): Unit = {
@@ -48,7 +46,7 @@ class ConsoleView extends LazyLogging with Reactor {
         printGameStatus(gameEngine)
         logger.info("Active player: " + gameEngine.getActivePlayer)
         printGrid(gameEngine)
-        printFigureSet(gameEngine)
+        printSetFigureSelection(gameEngine)
       }
     }
   }
@@ -73,8 +71,10 @@ class ConsoleView extends LazyLogging with Reactor {
     logger.info("Active player: " + gameEngine.getActivePlayer)
   }
 
-  def printFigureSet(gameEngine: GameEngineInterface): Unit = {
-    logger.info("\nChose which figure to place on field:\n"
+  def printSetFigureSelection(gameEngine: GameEngineInterface): Unit = {
+    logger.info(
+      "\n\"s [n] [a,b]\": Set a figure[n] to field[a,b]"
+      + "\nFigure Selection:"
       + "\n1 ->" + FigureType.BOMB + " | " +  gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.BOMB)
       + "\n2 ->" + FigureType.MARSHAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MARSHAL)
       + "\n3 ->" + FigureType.GENERAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.GENERAL)
@@ -86,7 +86,9 @@ class ConsoleView extends LazyLogging with Reactor {
       + "\n9 ->" + FigureType.MINER + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MINER)
       + "\n10 ->" + FigureType.SCOUT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SCOUT)
       + "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY)
-      + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG))
+      + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG)
+      + "\nExample: 's 2 B,3'")
+
   }
 
   def printGrid(gameEngine: GameEngineInterface): Unit = {

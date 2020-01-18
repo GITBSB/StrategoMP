@@ -20,7 +20,7 @@ class ConsoleController(var gameEngine: GameEngineInterface) extends LazyLogging
       case "b" =>
         gameEngine.startBattle
       case "s" =>
-        if (input.matches("s [0-9] [A-J],[0-9]")) {
+        if (values(1).matches("^[0-9]$|^1[0-2]") && values(2).matches("[A-J],[0-9]")) {
           val position = values(2).split(",")
           gameEngine.setFigure(convertInputToFigureType(values(1).toInt), Position(position(1).toInt, position(0).head - 'A'))
         }
