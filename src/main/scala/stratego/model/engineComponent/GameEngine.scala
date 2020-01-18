@@ -19,7 +19,7 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
                            statusLine: GameStatus = IDLE) extends GameEngineInterface {
 
   def startNewGame(): GameEngineInterface = {
-    val newGameEngine = copy(gameState = NEW_GAME)
+    val newGameEngine = copy(gameState = GameState.SET_FIGURES)
     publish(GameStartedEvent(newGameEngine)) // Add values which changed to the event so listeners can operate on them
     newGameEngine
   }

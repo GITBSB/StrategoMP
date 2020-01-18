@@ -6,8 +6,8 @@ import java.awt.{Color, Image}
 
 import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, WindowConstants}
-import stratego.gameEngine.GameStatus
 import stratego.model.engineComponent._
+import GameState._
 import stratego.model.gridComponent.{FigureType, Position}
 
 import scala.swing.Swing.LineBorder
@@ -85,9 +85,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
               
             } else {
               gameEngine.setFigure(FigureType.withName(selectedFigureButton.get.name), Position(selectedFieldButton.row, selectedFieldButton.column))
-              if (gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
-                publish(FigureSetEvent(gameEngine))
-              }
             }
           }
         } else if(gameEngine.getGameState == GameState.FIGHT)
@@ -145,11 +142,14 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   }
 
 
-  val statusline = new TextField(gameEngine.getStatusLine.toString, 20)
+  val statusLine = new Label{
+    text = "Start a new Game."
+    font = new Font("Ariel", java.awt.Font.ITALIC, 18)
+  }
 
   contents = new BorderPanel {
     add(gridPanel, BorderPanel.Position.Center)
-    add(statusline, BorderPanel.Position.South)
+    add(statusLine, BorderPanel.Position.South)
     add(figurePanel, BorderPanel.Position.East)
   }
 
@@ -158,10 +158,10 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   reactions += {
     case event: GameQuit => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
-    case event: GameStartedEvent => clearField; updateFieldButtons
-    case event: FigureSetEvent => updateFieldButtons; updateFigureButtons
-    case event: MoveFigureEvent => updateStatusLine; updateFieldButtons
-    case event: FigureDeletedEvent => updateStatusLine; updateFieldButtons; updateFigureButtons
+    case event: GameStartedEvent=> clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: FigureSetEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
+    case event: MoveFigureEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: FigureDeletedEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
   }
 
 
@@ -172,11 +172,17 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     } fieldButtons(x)(y).clearImage
   }
 
-  def updateStatusLine(): Unit = {
-    statusline.text = gameEngine.getStatusLine.toString
+  def updateStatusLine(gameEngine: GameEngineInterface): Unit = {
+    val statusLineGUI = new StringBuilder
+    if(gameEngine.getGameState == SET_FIGURES || gameEngine.getGameState == FIGHT) {
+      statusLineGUI.append( gameEngine.getActivePlayer.name.toString + ": " +  gameEngine.getGameState.toString + "  -  " + gameEngine.getStatusLine)
+    } else if(gameEngine.getGameState == END) {
+      statusLineGUI.append(gameEngine.getGameState.toString + "  -  " + gameEngine.getStatusLine)
+    }
+    statusLine.text = statusLineGUI.toString()
   }
 
-  def updateFieldButtons(): Unit = {
+  def updateFieldButtons(gameEngine: GameEngineInterface): Unit = {
     for {
       x <- 0 until 10
       y <- 0 until 10
@@ -185,11 +191,13 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
       if(stringId == "") fieldButtons(x)(y).clearImage
       else  fieldButtons(x)(y).setImage(stringId)
     }
+    repaint
   }
 
-  def updateFigureButtons = {
+  def updateFigureButtons(gameEngine: GameEngineInterface) = {
     for(button <- figureButtons) {
       button.text = gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(button.name)).toString
     }
+    repaint
   }
 }

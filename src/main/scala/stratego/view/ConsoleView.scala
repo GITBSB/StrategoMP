@@ -88,7 +88,6 @@ class ConsoleView extends LazyLogging with Reactor {
       + "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY)
       + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG)
       + "\nExample: 's 2 B,3'")
-
   }
 
   def printGrid(gameEngine: GameEngineInterface): Unit = {
