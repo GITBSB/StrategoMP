@@ -81,12 +81,12 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
           if (selectedFigureButton.isDefined) {
             if (selectedFigureButton.get.name == "Delete") {
               // TODO: needs method to delete in GameEngine
-              publish(FigureDeletedEvent())
+              publish(FigureDeletedEvent(gameEngine))
               
             } else {
               gameEngine.setFigure(FigureType.withName(selectedFigureButton.get.name), Position(selectedFieldButton.row, selectedFieldButton.column))
               if (gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
-                publish(FigureSetEvent())
+                publish(FigureSetEvent(gameEngine))
               }
             }
           }

@@ -28,6 +28,7 @@ trait GameEngineInterface extends Publisher {
   def gridToString: String
 }
 
+case class FigureDeletedEvent(gameEngine: GameEngineInterface) extends Event
 case class GameStartedEvent(gameEngine: GameEngineInterface) extends Event
 case class GameQuitEvent(gameEngine: GameEngineInterface) extends Event
 case class WinnerEvent(gameEngine: GameEngineInterface) extends Event
