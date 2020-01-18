@@ -1,7 +1,7 @@
 package stratego.view
 
 import com.typesafe.scalalogging.LazyLogging
-import stratego.model.engineComponent.{AttackEvent, FigureSetEvent, GameEngineInterface, GameEngineProxy, GameQuitEvent, GameStartedEvent, GameState, Init, InvalidMoveEvent, MoveFigureEvent, WinnerEvent}
+import stratego.model.engineComponent._
 import stratego.model.gridComponent.FigureType
 
 import scala.swing.Reactor
@@ -32,23 +32,23 @@ class ConsoleView extends LazyLogging with Reactor {
     logger.info("Player " + gameEngine.getActivePlayer.toString + " starts")
     printFigureSet(gameEngine)
     logger.info("\nOptions:"
-      + "\n\"s [n] [a,b]\": Set a figure[n] to field[a,b]")
+      + "\n\"s [n] [a,b]\": Set a figure[n] to field[a,b] - Example: 's 2 B,3'")
   }
 
   def printFigureSetResult(gameEngine: GameEngineInterface): Unit = {
     gameEngine.getGameState match {
       case GameState.FIGHT => {
         printActivePlayer(gameEngine)
+        printGrid(gameEngine)
         logger.info("All figures set!\nMatch beginns...\n\n"
           + "Options:"
           + "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]")
-        printGrid(gameEngine)
       }
       case GameState.SET_FIGURES => {
         printGameStatus(gameEngine)
         logger.info("Active player: " + gameEngine.getActivePlayer)
-        printFigureSet(gameEngine)
         printGrid(gameEngine)
+        printFigureSet(gameEngine)
       }
     }
   }
@@ -86,12 +86,11 @@ class ConsoleView extends LazyLogging with Reactor {
       + "\n9 ->" + FigureType.MINER + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MINER)
       + "\n10 ->" + FigureType.SCOUT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SCOUT)
       + "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY)
-      + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG)
-      + "\n Plus Coordinates - Input example: B,3")
+      + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG))
   }
 
   def printGrid(gameEngine: GameEngineInterface): Unit = {
-  logger.info(gameEngine.gridToString)
+    logger.info(gameEngine.gridToString)
   }
 
   def printWinner(gameEngine: GameEngineInterface): Unit = {

@@ -20,15 +20,9 @@ class ConsoleController(var gameEngine: GameEngineInterface) extends LazyLogging
       case "b" =>
         gameEngine.startBattle
       case "s" =>
-        //inputCordinates.matches("[A-J],[0-9]")//TODO: First values is currently also an int for grid Position/Field
-        if (values.size == 3) {
+        if (input.matches("s [0-9] [A-J],[0-9]")) {
           val position = values(2).split(",")
-          if (position.size == 2) {
-            val row = if (position(1).toInt > 9 || position(1).toInt < 0) 0 else position(1).toInt
-            val col = if (position(0).toInt > 9 || position(0).toInt < 0) 4 else position(0).toInt
-            val figure = if (values(1).toInt > 12 || values(1).toInt < 1) 1 else values(1).toInt
-            gameEngine.setFigure(convertInputToFigureType(figure), Position(row, col))
-          }
+          gameEngine.setFigure(convertInputToFigureType(values(1).toInt), Position(position(1).toInt, position(0).head - 'A'))
         }
       case "m" =>
         //inputCordinates.matches("[A-J],[0-9]")//TODO: First values is currently also an int for grid Position/Field
@@ -46,7 +40,7 @@ class ConsoleController(var gameEngine: GameEngineInterface) extends LazyLogging
       case "d" =>
         gameEngine.setUpDefaultGrid
       case _ =>
-        // Handle unknown input
+
     }
     continueProcessing
   }
