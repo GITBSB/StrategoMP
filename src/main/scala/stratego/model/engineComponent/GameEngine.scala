@@ -224,6 +224,8 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
 
   def getFigure(position: Position): Option[Figure] = grid.getField(position).getFigure
 
+  def getFieldStringGUI(position:Position): String = grid.getField(position).toStringGUI(gameState, activePlayer)
+
   def getFigureSetActivePlayer: FigureSet = figureSet(activePlayer)
 
   def getGrid: GridInterface = grid

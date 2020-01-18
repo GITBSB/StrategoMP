@@ -9,4 +9,5 @@ trait FieldInterface {
   def getFieldType(): FieldType
   def getFigure(): Option[Figure]
   def toStringTUI(gameState: GameState, activePlayer: Player): String
+  def toStringGUI(gameState: GameState, activePlayer: Player): String
 }

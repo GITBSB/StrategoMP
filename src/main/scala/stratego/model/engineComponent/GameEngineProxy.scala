@@ -6,8 +6,6 @@ import stratego.model.gridComponent.FigureType.FigureType
 import stratego.model.gridComponent.{Figure, FigureSet, GridInterface, Position}
 import stratego.model.playerComponent.Player
 
-import scala.swing.Publisher
-
 class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInterface {
 
   //propagate events
@@ -74,4 +72,6 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   def getWinner: Option[Player] = gameEngine.getWinner
 
   def getStatusLine: GameStatus = gameEngine.getStatusLine
+
+  def getFieldStringGUI(position: Position): String = gameEngine.getFieldStringGUI(position)
 }

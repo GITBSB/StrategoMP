@@ -11,7 +11,6 @@ import scala.swing.event.Event
 
 trait GameEngineInterface extends Publisher {
   def startNewGame: GameEngineInterface
-  def gridToString: String
   def quitGame: GameEngineInterface
   def startBattle: GameEngineInterface
   def changePlayer: GameEngineInterface
@@ -25,6 +24,8 @@ trait GameEngineInterface extends Publisher {
   def getWinner: Option[Player]
   def getStatusLine: GameStatus
   def setUpDefaultGrid: GameEngineInterface
+  def getFieldStringGUI(position:Position): String
+  def gridToString: String
 }
 
 case class GameStartedEvent(gameEngine: GameEngineInterface) extends Event
