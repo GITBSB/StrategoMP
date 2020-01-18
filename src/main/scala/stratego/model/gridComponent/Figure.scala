@@ -2,7 +2,7 @@ package stratego.model.gridComponent
 
 import stratego.model.playerComponent.Player
 
-abstract class Figure(val figureType: FigureType.FigureType, val stringOut: String, val strength: Int, val player: Player) {
+sealed abstract class Figure(val figureType: FigureType.FigureType, val stringOut: String, val strength: Int, val player: Player) {
   override def toString: String = stringOut
 }
 

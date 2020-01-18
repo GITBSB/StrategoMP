@@ -12,8 +12,9 @@ object Stratego {
  // val injector: Injector = Guice.createInjector(new StrategoModule)
   val gameEngine = GameEngine()
   val gameEngineProxy = new GameEngineProxy(gameEngine)
-  val consoleView: ConsoleView = new ConsoleView(gameEngineProxy)
+  val consoleView: ConsoleView = new ConsoleView
   val consoleController = new ConsoleController(gameEngineProxy)
+  consoleView.listenTo(gameEngineProxy)
   consoleView.printMenu
 
   def main(args: Array[String]): Unit = {

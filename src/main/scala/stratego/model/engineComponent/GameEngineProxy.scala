@@ -14,40 +14,52 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   listenTo(gameEngine)
   deafTo(this)
   reactions += {
-    case event => publish(event)
+      case event: Init => this.publish(event)
+      case event: GameStartedEvent => this.publish(event)
+      case event: FigureSetEvent => this.publish(event)
+      case event: MoveFigureEvent => this.publish(event)
+      case event: InvalidMoveEvent => this.publish(event)
+      case event: AttackEvent => this.publish(event)
+      case event: WinnerEvent => this.publish(event)
+      case event: GameQuitEvent => this.publish(event)
+      case _ => this.publish(_)
   }
 
   def startNewGame: GameEngineInterface =  {
-    gameEngine = gameEngine.startNewGame
+    remap(gameEngine.startNewGame)
+  }
+
+  def quitGame: GameEngineInterface = {
+    remap(gameEngine.quitGame)
+  }
+
+  def startBattle: GameEngineInterface = {
+    remap(gameEngine.startBattle)
+  }
+  def changePlayer: GameEngineInterface = {
+    remap(gameEngine.changePlayer)
+  }
+
+  def setFigure(figureType: FigureType, position: Position): GameEngineInterface = {
+    remap(gameEngine.setFigure(figureType, position))
+  }
+
+  def moveFigure(from: Position, to: Position): GameEngineInterface = {
+    remap(gameEngine.moveFigure(from, to))
+  }
+
+  def setUpDefaultGrid: GameEngineInterface = {
+    remap(gameEngine.setUpDefaultGrid)
+  }
+
+  private def remap(newGameEngine: GameEngineInterface): GameEngineInterface = {
+    deafTo(gameEngine)
+    listenTo(newGameEngine)
+    gameEngine = newGameEngine
     gameEngine
   }
 
   def gridToString: String = gameEngine.gridToString
-
-  def quitGame: GameEngineInterface = {
-    gameEngine = gameEngine.quitGame
-    gameEngine
-  }
-
-  def startBattle: GameEngineInterface = {
-    gameEngine = gameEngine.startBattle
-    gameEngine
-  }
-
-  def changePlayer: GameEngineInterface = {
-    gameEngine = gameEngine.changePlayer
-    gameEngine
-  }
-
-  def setFigure(figureType: FigureType, position: Position): GameEngineInterface = {
-    gameEngine = gameEngine.setFigure(figureType, position)
-    gameEngine
-  }
-
-  def moveFigure(from: Position, to: Position): GameEngineInterface = {
-    gameEngine = gameEngine.moveFigure(from, to)
-    gameEngine
-  }
 
   def getFigureSetActivePlayer: FigureSet = gameEngine.getFigureSetActivePlayer
 

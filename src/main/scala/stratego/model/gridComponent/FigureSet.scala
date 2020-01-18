@@ -8,7 +8,7 @@ case class FigureSet(figures: Map[FigureType.FigureType, List[Figure]], lastFigu
    FigureType.BOMB -> List( Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player)),
    FigureType.MARSHAL -> List(Marshal(player)),
    FigureType.GENERAL -> List(General(player)),
-   FigureType.COLONEL -> List(Colonel(player), Colonel(player), Colonel(player)),
+   FigureType.COLONEL -> List(Colonel(player), Colonel(player)),
    FigureType.MAJOR -> List(Major(player), Major(player), Major(player)),
    FigureType.CAPTAIN -> List(Captain(player), Captain(player), Captain(player), Captain(player)),
    FigureType.LIEUTENANT -> List(Lieutenant(player), Lieutenant(player), Lieutenant(player), Lieutenant(player)),

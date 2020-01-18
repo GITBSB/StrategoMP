@@ -24,17 +24,19 @@ trait GameEngineInterface extends Publisher {
   def getActivePlayer: Player
   def getWinner: Option[Player]
   def getStatusLine: GameStatus
+  def setUpDefaultGrid: GameEngineInterface
 }
 
-case class GameStartedEvent() extends Event
-case class GameQuitEvent() extends Event
-case class WinnerEvent() extends Event
-case class MoveFigureEvent() extends Event
-case class FigureSetEvent() extends Event
-case class AttackEvent() extends Event
-case class InvalidMoveEvent() extends Event
-case class ChangePlayerEvent() extends Event
+case class GameStartedEvent(gameEngine: GameEngineInterface) extends Event
+case class GameQuitEvent(gameEngine: GameEngineInterface) extends Event
+case class WinnerEvent(gameEngine: GameEngineInterface) extends Event
+case class MoveFigureEvent(gameEngine: GameEngineInterface) extends Event
+case class FigureSetEvent(gameEngine: GameEngineInterface) extends Event
+case class AttackEvent(gameEngine: GameEngineInterface) extends Event
+case class InvalidMoveEvent(gameEngine: GameEngineInterface) extends Event
+case class ChangePlayerEvent(gameEngine: GameEngineInterface) extends Event
 case class Init() extends Event
 
+//TODO: remove these two events
 case class GameQuit() extends Event
 case class GameChanged() extends Event

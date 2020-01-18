@@ -1,7 +1,7 @@
 package stratego.model.engineComponent
 
 import scala.swing.event.Event
-
+// TODO: Remove this object
 object GameEvent {
  // case object GameStartedEvent extends Event
  // case object GameQuitEvent extends Event

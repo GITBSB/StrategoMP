@@ -6,79 +6,74 @@ import stratego.model.gridComponent.FigureType
 
 import scala.swing.Reactor
 
-// TODO: View currently operates on gameEngineProxy which is always on previous state on an event!!!
-//TODO: Pass state/state changes as a function parameter instead of a mutable object reference
-class ConsoleView(gameEngine: GameEngineInterface) extends LazyLogging with Reactor {
-  listenTo(gameEngine)
+class ConsoleView extends LazyLogging with Reactor {
 
   reactions += {
     case event: Init => printMenu
-    case event: GameStartedEvent => printGameStart
-    case event: FigureSetEvent => printFigureSetResult
-    case event: MoveFigureEvent => printMoveResult
-    case event: InvalidMoveEvent => printInvalidMoveResult
-    case event: AttackEvent => printAttackResult
-    case event: WinnerEvent =>
-    case event: GameQuitEvent => printGameQuit
+    case event: GameStartedEvent => printGameStart(event.gameEngine)
+    case event: FigureSetEvent => printFigureSetResult(event.gameEngine)
+    case event: MoveFigureEvent => printMoveResult(event.gameEngine)
+    case event: InvalidMoveEvent => printMoveResult(event.gameEngine)
+    case event: AttackEvent => printMoveResult(event.gameEngine)
+    case event: WinnerEvent => printWinner(event.gameEngine)
+    case event: GameQuitEvent => printGameQuit(event.gameEngine)
   }
 
   def printMenu: Unit = {
     logger.info("\nWelcome to Stratego\n\nOptions:"
       + "\n\"n\": Start a new game"
-      + "\n\"q\": Quit the game")
+      + "\n\"d\": Start game with default setup"
+      + "\n\"q\": Quit the game" )
   }
 
-  def printGameStart: Unit = {
+  def printGameStart(gameEngine: GameEngineInterface): Unit = {
     logger.info("New game started:\n")
-    printGrid
+    printGrid(gameEngine)
     logger.info("Player " + gameEngine.getActivePlayer.toString + " starts")
-    printFigureSet
+    printFigureSet(gameEngine)
     logger.info("\nOptions:"
       + "\n\"s [n] [a,b]\": Set a figure[n] to field[a,b]")
   }
 
-  def printFigureSetResult: Unit = {
+  def printFigureSetResult(gameEngine: GameEngineInterface): Unit = {
     gameEngine.getGameState match {
       case GameState.FIGHT => {
+        printActivePlayer(gameEngine)
         logger.info("All figures set!\nMatch beginns...\n\n"
           + "Options:"
           + "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]")
-        printGrid
+        printGrid(gameEngine)
       }
       case GameState.SET_FIGURES => {
-        logger.info(gameEngine.getStatusLine.toString)
+        printGameStatus(gameEngine)
         logger.info("Active player: " + gameEngine.getActivePlayer)
-        printFigureSet
-        printGrid
+        printFigureSet(gameEngine)
+        printGrid(gameEngine)
       }
     }
   }
 
-  def printMoveResult: Unit = {
-    logger.info(gameEngine.getStatusLine.toString)
+  def printMoveResult(gameEngine: GameEngineInterface): Unit = {
+    printGameStatus(gameEngine)
+    printActivePlayer(gameEngine)
+    printGrid(gameEngine)
+    logger.info("Options:"
+      + "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]")
   }
 
-  def printInvalidMoveResult: Unit = {
-    logger.info(gameEngine.getStatusLine.toString)
-  }
-
-  def printAttackResult: Unit = {
-    logger.info(gameEngine.getStatusLine.toString)
-  }
-
-  def printGameState: Unit = {
+  def printGameState(gameEngine: GameEngineInterface): Unit = {
     logger.info("Current game state: " + gameEngine.getGameState)
   }
 
-  def printGameStatus: Unit = {
+  def printGameStatus(gameEngine: GameEngineInterface): Unit = {
     logger.info("Current game status: " + gameEngine.getStatusLine)
   }
 
-  def printActivePlayer: Unit = {
-    logger.info("Active player: " + gameEngine)
+  def printActivePlayer(gameEngine: GameEngineInterface): Unit = {
+    logger.info("Active player: " + gameEngine.getActivePlayer)
   }
 
-  def printFigureSet: Unit = {
+  def printFigureSet(gameEngine: GameEngineInterface): Unit = {
     logger.info("\nChose which figure to place on field:\n"
       + "\n1 ->" + FigureType.BOMB + " | " +  gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.BOMB)
       + "\n2 ->" + FigureType.MARSHAL + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MARSHAL)
@@ -91,15 +86,19 @@ class ConsoleView(gameEngine: GameEngineInterface) extends LazyLogging with Reac
       + "\n9 ->" + FigureType.MINER + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.MINER)
       + "\n10 ->" + FigureType.SCOUT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SCOUT)
       + "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY)
-      + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG))
-    logger.info("\n Plus Coordinates - Input example: B,3")
+      + "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG)
+      + "\n Plus Coordinates - Input example: B,3")
   }
 
-  def printGrid: Unit = {
-    logger.info(gameEngine.gridToString)
+  def printGrid(gameEngine: GameEngineInterface): Unit = {
+  logger.info(gameEngine.gridToString)
   }
 
-  def printGameQuit: Unit = {
+  def printWinner(gameEngine: GameEngineInterface): Unit = {
+    logger.info("Player " + gameEngine.getWinner.toString + " wins the game!")
+  }
+
+  def printGameQuit(gameEngine: GameEngineInterface): Unit = {
     logger.info("Quitting...")
   }
 }
