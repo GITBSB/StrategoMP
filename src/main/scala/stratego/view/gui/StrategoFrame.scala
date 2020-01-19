@@ -49,8 +49,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   def gridPanel:Panel = new GridPanel(10, 10) {
     val originalImage: BufferedImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
-    val resizedImage = originalImage.getScaledInstance(745, 758, Image.SCALE_DEFAULT)
-    //preferredSize_=(new Dimension(80, 100))
+    val resizedImage = originalImage.getScaledInstance(749, 763, Image.SCALE_DEFAULT)
 
     override def paintComponent(g: Graphics2D): Unit = {
       super.paintComponent(g)
