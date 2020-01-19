@@ -20,6 +20,7 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
       case event: AttackEvent => this.publish(event)
       case event: WinnerEvent => this.publish(event)
       case event: GameQuitEvent => this.publish(event)
+      case event: FigureDeletedEvent => this.publish(event)
       case _ => this.publish(_)
   }
 
@@ -41,6 +42,8 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   def setFigure(figureType: FigureType, position: Position): GameEngineInterface = {
     remap(gameEngine.setFigure(figureType, position))
   }
+
+  def deleteFigure(position: Position): GameEngineInterface = remap(gameEngine.deleteFigure(position))
 
   def moveFigure(from: Position, to: Position): GameEngineInterface = {
     remap(gameEngine.moveFigure(from, to))
@@ -74,4 +77,5 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   def getStatusLine: GameStatus = gameEngine.getStatusLine
 
   def getFieldStringGUI(position: Position): String = gameEngine.getFieldStringGUI(position)
+
 }

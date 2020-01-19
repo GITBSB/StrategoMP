@@ -15,6 +15,7 @@ trait GameEngineInterface extends Publisher {
   def startBattle: GameEngineInterface
   def changePlayer: GameEngineInterface
   def setFigure(figureType: FigureType, position: Position): GameEngineInterface
+  def deleteFigure(position: Position): GameEngineInterface
   def moveFigure(from: Position, to: Position): GameEngineInterface
   def getFigureSetActivePlayer: FigureSet
   def getFigure(position: Position): Option[Figure]

@@ -73,6 +73,22 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
     }
   }
 
+  def deleteFigure(position: Position): GameEngineInterface = {
+    var newGrid = grid
+    var newFigureSet = figureSet
+    var newStatusLine = WRONG_INPUT
+    if (grid.getField(position).getFieldType() == activePlayer.fieldType) {
+      if (grid.getField(position).getFigure().isDefined) {
+        newFigureSet = newFigureSet.updated(activePlayer, newFigureSet(activePlayer).addFigure(grid.getField(position).getFigure().get))
+        newGrid = grid.assignField(position, None)
+        newStatusLine = FIGURE_DELETED
+      }
+    }
+    val newGameEngine = copy(grid = newGrid, figureSet = newFigureSet, statusLine = newStatusLine)
+    publish(FigureDeletedEvent(newGameEngine))
+    newGameEngine
+  }
+
   //TODO: remove this method
   def createFigure(figureType: FigureType, player: Player): Figure = {
      figureType match { // Throws an exception if string does not match any FigureType!
