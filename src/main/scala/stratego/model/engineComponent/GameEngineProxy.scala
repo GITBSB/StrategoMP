@@ -20,7 +20,6 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
       case event: AttackEvent => this.publish(event)
       case event: WinnerEvent => this.publish(event)
       case event: GameQuitEvent => this.publish(event)
-      case _ => this.publish(_)
   }
 
   def startNewGame: GameEngineInterface =  {
