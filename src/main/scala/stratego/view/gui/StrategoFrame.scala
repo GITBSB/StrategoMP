@@ -8,6 +8,7 @@ import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, UIManager, WindowConstants}
 import stratego.model.engineComponent._
 import stratego.model.gridComponent.{FigureType, Position}
+import stratego.view.gui.util.StretchIcon
 
 import scala.swing.event._
 import scala.swing.{Frame, MenuBar, Reactor, _}
@@ -156,11 +157,13 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   visible = true
 
   reactions += {
-
     case event: GameQuitEvent => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
-    case event: GameStartedEvent=> clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: GameStartedEvent => clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: FigureSetEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
     case event: MoveFigureEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
+  }
+
+  reactions += {
     case event: InvalidMoveEvent => updateStatusLine(event.gameEngine);
     case event: AttackEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: WinnerEvent => printWinner(event.gameEngine); updateFieldButtons(event.gameEngine)
@@ -182,7 +185,9 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   def updateStatusLine(gameEngine: GameEngineInterface): Unit = {
     val statusLineGUI = new StringBuilder
-    statusLineGUI.append( gameEngine.getActivePlayer.name.toString + ": " +  gameEngine.getGameState.toString + "  -  " + gameEngine.getStatusLine)
+    statusLineGUI.append(gameEngine.getActivePlayer.name + ": " +
+                         gameEngine.getGameState + "  -  " +
+                         gameEngine.getStatusLine)
     statusLine.text = statusLineGUI.toString()
   }
 
@@ -191,17 +196,14 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
       x <- 0 until 10
       y <- 0 until 10
     } {
-      val stringId = gameEngine.getFieldStringGUI(Position(x, y))
-      if(stringId == "") fieldButtons(x)(y).clearImage
-      else  fieldButtons(x)(y).setImage(stringId)
+      val imageId = gameEngine.getFieldStringGUI(Position(x, y))
+      if(imageId.length == 0) fieldButtons(x)(y).clearImage
+      else  fieldButtons(x)(y).setImage(imageId)
     }
-    repaint
   }
 
-  def updateFigureButtons(gameEngine: GameEngineInterface) = {
-    for(button <- figureButtons) {
-      button.text = gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(button.name)).toString
-    }
-    repaint
+  def updateFigureButtons(gameEngine: GameEngineInterface): Unit = {
+    figureButtons.foreach(b => b.text =
+      gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(b.name)).toString)
   }
 }

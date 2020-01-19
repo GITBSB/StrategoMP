@@ -1,4 +1,4 @@
-package stratego.view.gui;
+package stratego.view.gui.util;
 
 import java.awt.Component;
 import java.awt.Container;

@@ -3,6 +3,7 @@ package stratego.view.gui
 import java.awt.image.BufferedImage
 
 import javax.swing.ImageIcon
+import stratego.view.gui.util.StretchIcon
 
 import scala.swing.{Button, Dimension}
 
