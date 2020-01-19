@@ -27,7 +27,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   override def closeOperation(): Unit = gameEngine.quitGame
   peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
 
-
   menuBar = new MenuBar {
     contents += new Menu("Game") {
       mnemonic = Key.F
@@ -158,11 +157,11 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   visible = true
 
   reactions += {
-    case event: GameQuit => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
+    case event: GameQuitEvent => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
     case event: GameStartedEvent=> clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: FigureSetEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
     case event: MoveFigureEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
-    case event: InvalidMoveEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: InvalidMoveEvent => updateStatusLine(event.gameEngine);
     case event: AttackEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: WinnerEvent => printWinner(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: FigureDeletedEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
