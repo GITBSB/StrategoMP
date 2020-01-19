@@ -1,11 +1,11 @@
 package stratego.model.engineComponent
 
 import stratego.gameEngine.GameStatus._
-import GameState._
-import stratego.model.gridComponent.Figure.{Bomb, Captain, Colonel, Flag, Lieutenant, Major, Marshal, Miner, Scout, Sergeant, Spy, General}
-import stratego.model.gridComponent.FigureType._
+import stratego.model.engineComponent.GameState._
 import stratego.model.gridComponent.FieldType._
-import stratego.model.gridComponent.{Figure, FigureSet, Grid, GridInterface, Position}
+import stratego.model.gridComponent.Figure._
+import stratego.model.gridComponent.FigureType._
+import stratego.model.gridComponent.{FigureType => _, _}
 import stratego.model.playerComponent.Player
 
 // TODO: Think about adding State Pattern instead of enum gameState
@@ -89,23 +89,6 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
     newGameEngine
   }
 
-  //TODO: remove this method
-  def createFigure(figureType: FigureType, player: Player): Figure = {
-     figureType match { // Throws an exception if string does not match any FigureType!
-      case SCOUT => Scout(player)
-      case MARSHAL => Marshal(player)
-      case COLONEL => Colonel(player)
-      case MAJOR => Major(player)
-      case CAPTAIN => Captain(player)
-      case LIEUTENANT => Lieutenant(player)
-      case SERGEANT => Sergeant(player)
-      case MINER => Miner(player)
-      case FLAG => Flag(player)
-      case SPY => Spy(player)
-      case BOMB => Bomb(player)
-    }
-  }
-
   def moveFigure(from: Position, to: Position): GameEngineInterface = {
     val source = grid.getField(from)
     val destination = grid.getField(to)
@@ -154,7 +137,7 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
             if (figure.strength > opponent.strength) {
               // figure wins!
               newStatusLine = ATTACK_WIN
-              newGrid = newGrid.assignField(to, None)
+              newGrid = newGrid.move(from, to)
             } else if (figure.strength < opponent.strength) {
               // opponent wins!
               newStatusLine = ATTACK_LOOSE
@@ -206,40 +189,6 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
     publish(ChangePlayerEvent(newGameEngine))
     newGameEngine
   }
-  //does not work yet !!!
-  def setUpDefaultGrid: GameEngineInterface = {
-    var newGrid = Grid().createNewGrid()
-    val tempFigureSetA = createFigureList(playerA)
-    val tempFigureSetB = createFigureList(playerB)
-    for {
-      row <- 0 until 4
-      col <- 0 until 10
-      figure <- tempFigureSetA
-    } newGrid = newGrid.assignField(Position(row, col), Some(figure))
-    for {
-      row <- 6 until 10
-      col <- 0 until 10
-      figure <- tempFigureSetB
-    } newGrid = newGrid.assignField(Position(row, col), Some(figure))
-    val newGameEngine = copy(grid = newGrid, gameState = FIGHT)
-    publish(FigureSetEvent(newGameEngine))
-    newGameEngine
-  }
-
-  def createFigureList(player: Player): List[Figure] = {
-    List(Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player),
-      Marshal(player),
-      General(player),
-      Colonel(player), Colonel(player),
-      Major(player), Major(player), Major(player),
-      Captain(player), Captain(player), Captain(player), Captain(player),
-      Lieutenant(player), Lieutenant(player), Lieutenant(player), Lieutenant(player),
-      Sergeant(player), Sergeant(player), Sergeant(player), Sergeant(player),
-      Miner(player), Miner(player), Miner(player), Miner(player), Miner(player),
-      Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player),
-      Flag(player),
-      Spy(player))
-  }
 
   def gridToString: String = grid.toStringTUI(gameState, activePlayer) //TODO: When time refactor these toStringTUI methods
 
@@ -248,8 +197,6 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
   def getFieldStringGUI(position:Position): String = grid.getField(position).toStringGUI(gameState, activePlayer)
 
   def getFigureSetActivePlayer: FigureSet = figureSet(activePlayer)
-
-  def getGrid: GridInterface = grid
 
   def getGameState: GameState = gameState
 

@@ -30,8 +30,6 @@ class ConsoleController(var gameEngine: GameEngineInterface) extends LazyLogging
           val to = values(2).split(",")
           gameEngine.moveFigure(Position(from(1).toInt, from(0).head - 'A'), Position(to(1).toInt, to(0).head - 'A'))
         }
-      case "d" =>
-        gameEngine.setUpDefaultGrid
       case _ =>
 
     }

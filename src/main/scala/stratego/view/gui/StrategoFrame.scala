@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage
 import java.awt.{Color, Image}
 
 import javax.imageio.ImageIO
-import javax.swing.{BorderFactory, WindowConstants}
+import javax.swing.{BorderFactory, UIManager, WindowConstants}
 import stratego.model.engineComponent._
 import stratego.model.gridComponent.{FigureType, Position}
 
@@ -69,7 +69,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
       if((x == 4 || x == 5) && (y == 2 || y == 3 || y == 6|| y == 7))
         fieldButtons(x)(y).enabled = false
-
       contents += fieldButton
       listenTo(fieldButton)
     }
@@ -88,7 +87,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
           }
         } else if(gameEngine.getGameState == GameState.FIGHT)
           if (fieldButtonSelect.isDefined) {
-            fieldButtonSelect.get.border =  selectedFieldButton.border
+            fieldButtonSelect.get.border = UIManager.getBorder("Button.border")
             gameEngine.moveFigure(Position(fieldButtonSelect.get.row, fieldButtonSelect.get.column), Position(selectedFieldButton.row, selectedFieldButton.column))
             fieldButtonSelect = None
           } else {
@@ -157,6 +156,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   visible = true
 
   reactions += {
+
     case event: GameQuitEvent => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
     case event: GameStartedEvent=> clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: FigureSetEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)

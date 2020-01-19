@@ -3,7 +3,7 @@ package stratego.model.engineComponent
 import stratego.gameEngine.GameStatus.GameStatus
 import stratego.model.engineComponent.GameState.GameState
 import stratego.model.gridComponent.FigureType.FigureType
-import stratego.model.gridComponent.{Figure, FigureSet, GridInterface, Position}
+import stratego.model.gridComponent.{Figure, FigureSet, Position}
 import stratego.model.playerComponent.Player
 
 class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInterface {
@@ -49,10 +49,6 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
     remap(gameEngine.moveFigure(from, to))
   }
 
-  def setUpDefaultGrid: GameEngineInterface = {
-    remap(gameEngine.setUpDefaultGrid)
-  }
-
   private def remap(newGameEngine: GameEngineInterface): GameEngineInterface = {
     deafTo(gameEngine)
     listenTo(newGameEngine)
@@ -65,8 +61,6 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   def getFigureSetActivePlayer: FigureSet = gameEngine.getFigureSetActivePlayer
 
   def getFigure(position: Position): Option[Figure] = gameEngine.getFigure(position)
-
-  def getGrid: GridInterface = gameEngine.getGrid
 
   def getGameState: GameState = gameEngine.getGameState
 
