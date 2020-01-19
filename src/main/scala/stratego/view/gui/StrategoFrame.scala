@@ -15,7 +15,9 @@ import scala.swing.{Frame, MenuBar, Reactor, _}
 class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   listenTo(gameEngine)
   title = "Stratego"
-  preferredSize = new Dimension(850, 850)
+  val windowHeight = 800
+  val windowWidth = 800
+  preferredSize = new Dimension(windowWidth, windowHeight)
 
   var fieldButtons = Array.ofDim[FieldButton](10, 10)
   var figureButtons = scala.collection.mutable.ListBuffer.empty[Button]
@@ -48,7 +50,7 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   def gridPanel:Panel = new GridPanel(10, 10) {
     val originalImage: BufferedImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
-    val resizedImage = originalImage.getScaledInstance(749, 763, Image.SCALE_DEFAULT)
+    val resizedImage = originalImage.getScaledInstance(windowWidth - 101, windowHeight - 87, Image.SCALE_DEFAULT) //749 763
 
     override def paintComponent(g: Graphics2D): Unit = {
       super.paintComponent(g)
