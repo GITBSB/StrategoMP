@@ -6,18 +6,17 @@ import java.awt.{Color, Image}
 
 import javax.imageio.ImageIO
 import javax.swing.{BorderFactory, WindowConstants}
+import stratego.model.engineComponent.GameState._
 import stratego.model.engineComponent._
-import GameState._
 import stratego.model.gridComponent.{FigureType, Position}
 
-import scala.swing.Swing.LineBorder
 import scala.swing.event._
 import scala.swing.{Frame, MenuBar, Reactor, _}
 
 class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   listenTo(gameEngine)
   title = "Stratego"
-  preferredSize = new Dimension(800, 800)
+  preferredSize = new Dimension(850, 850)
 
   var fieldButtons = Array.ofDim[FieldButton](10, 10)
   var figureButtons = scala.collection.mutable.ListBuffer.empty[Button]
@@ -50,14 +49,17 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   def gridPanel:Panel = new GridPanel(10, 10) {
     val originalImage: BufferedImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
-    val resizedImage = originalImage.getScaledInstance(700, 700, Image.SCALE_DEFAULT)
+    val resizedImage = originalImage.getScaledInstance(745, 758, Image.SCALE_DEFAULT)
+    //preferredSize_=(new Dimension(80, 100))
 
     override def paintComponent(g: Graphics2D): Unit = {
       super.paintComponent(g)
       if (null != resizedImage) g.drawImage(resizedImage, 0, 0, peer)
     }
-
-    border = LineBorder(java.awt.Color.BLACK, 2)
+    val compoundBorder = BorderFactory.createCompoundBorder(
+      BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder());
+    //border = LineBorder(java.awt.Color.DARK_GRAY, 2)
+    border = compoundBorder;
 
     for {
       x <- 0 until 10
