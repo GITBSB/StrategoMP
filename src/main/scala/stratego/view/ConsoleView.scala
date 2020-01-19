@@ -34,21 +34,10 @@ class ConsoleView extends LazyLogging with Reactor {
   }
 
   def printFigureSetResult(gameEngine: GameEngineInterface): Unit = {
-    gameEngine.getGameState match {
-      case GameState.FIGHT => {
-        printActivePlayer(gameEngine)
-        printGrid(gameEngine)
-        logger.info("All figures set!\nMatch beginns...\n\n"
-          + "Options:"
-          + "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]")
-      }
-      case GameState.SET_FIGURES => {
         printGameStatus(gameEngine)
         logger.info("Active player: " + gameEngine.getActivePlayer)
         printGrid(gameEngine)
         printSetFigureSelection(gameEngine)
-      }
-    }
   }
 
   def printMoveResult(gameEngine: GameEngineInterface): Unit = {
@@ -56,7 +45,8 @@ class ConsoleView extends LazyLogging with Reactor {
     printActivePlayer(gameEngine)
     printGrid(gameEngine)
     logger.info("Options:"
-      + "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]")
+      + "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]"
+      + "\nExample: 'm B,2 B,3'")
   }
 
   def printGameState(gameEngine: GameEngineInterface): Unit = {

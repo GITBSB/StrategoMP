@@ -25,17 +25,10 @@ class ConsoleController(var gameEngine: GameEngineInterface) extends LazyLogging
           gameEngine.setFigure(convertInputToFigureType(values(1).toInt), Position(position(1).toInt, position(0).head - 'A'))
         }
       case "m" =>
-        //inputCordinates.matches("[A-J],[0-9]")//TODO: First values is currently also an int for grid Position/Field
-        if (values.size == 3) {
+        if(input.matches("m [A-J],[0-9] [A-J],[0-9]")) {
           val from = values(1).split(",")
           val to = values(2).split(",")
-          if (from.size == 2 && to.size == 2) {
-            val fromRow = if (from(1).toInt > 9 || from(1).toInt < 0) 0 else from(1).toInt
-            val fromCol = if (from(0).toInt > 9 || from(0).toInt < 0) 4 else from(0).toInt
-            val toRow = if (to(1).toInt > 9 || to(1).toInt < 0) 4 else to(1).toInt
-            val toCol = if (to(0).toInt > 9 || to(0).toInt < 0) 4 else to(0).toInt
-            gameEngine.moveFigure(Position(fromRow, fromCol), Position(toRow, toCol))
-          }
+          gameEngine.moveFigure(Position(from(1).toInt, from(0).head - 'A'), Position(to(1).toInt, to(0).head - 'A'))
         }
       case "d" =>
         gameEngine.setUpDefaultGrid

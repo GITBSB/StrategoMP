@@ -18,5 +18,5 @@ object GameStatus extends Enumeration {
     val MINER_ATTACKS_BOMB = Value("Miner defused a bomb!")
     val BOMB_EXPLODES = Value("Bomb!")
     val FLAG_FOUND = Value("Flag was found")
-    val SET_FIGURES = Value("Flag was found")
+    val BATTLE_START = Value("All figures set! Match beginns..")
 }

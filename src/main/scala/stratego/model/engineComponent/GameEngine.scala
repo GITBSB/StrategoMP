@@ -54,18 +54,23 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
       // No figures of this type left. Player has to redo this move!
       newStatusLine = NO_FIGURES_LEFT
     }
+
     if (newFigureSet(inactivePlayer).noFiguresLeft() && newFigureSet(activePlayer).noFiguresLeft()) {
       // No player has figures left to set
-      newStatusLine = NO_FIGURES_LEFT
+      newStatusLine = BATTLE_START
       newGameState = FIGHT
+      val newGameEngine = copy(grid = newGrid, gameState = newGameState, statusLine = newStatusLine, figureSet = newFigureSet, activePlayer = nextPlayer)
+      publish(MoveFigureEvent(newGameEngine))
+      newGameEngine
+    } else {
+      if (newFigureSet(activePlayer).noFiguresLeft()) {
+        // Next player is allowed to set its figures
+        nextPlayer = inactivePlayer
+      }
+      val newGameEngine = copy(grid = newGrid, gameState = newGameState, statusLine = newStatusLine, figureSet = newFigureSet, activePlayer = nextPlayer)
+      publish(FigureSetEvent(newGameEngine))
+      newGameEngine
     }
-    if (newFigureSet(activePlayer).noFiguresLeft()) {
-      // Next player is allowed to set its figures
-      nextPlayer = inactivePlayer
-    }
-    val newGameEngine = copy(grid = newGrid, gameState = newGameState, statusLine = newStatusLine, figureSet = newFigureSet, activePlayer = nextPlayer)
-    publish(FigureSetEvent(newGameEngine))
-    newGameEngine
   }
 
   //TODO: remove this method
