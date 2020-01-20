@@ -14,4 +14,21 @@ class PositionTest extends WordSpec with Matchers {
       }
     }
   }
+  "A Position" when {
+    val row = 1
+    val col = 2
+    val position: Position = Position(row, col)
+
+    "applied should accept the arguments" in {
+      Position.apply(row, col) should be(position)
+    }
+  }
+  "A Position" when {
+    val row = 1
+    val col = 2
+    val position: Position = Position(row, col)
+    "unapplied should have arguments" in {
+      Position.unapply(position).get should be((row, col))
+    }
+  }
 }
