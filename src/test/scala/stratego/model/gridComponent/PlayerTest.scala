@@ -15,5 +15,22 @@ class PlayerTest extends WordSpec with Matchers {
         player.toString should be("Name")
       }
     }
+    "A Player" when {
+      val name = "name"
+      val fieldType = FieldType.A_SIDE
+      val player = Player(name, fieldType)
+
+      "applied should accept the arguments" in {
+        Player.apply(name, fieldType) should be(player)
+      }
+    }
+    "A Player" when {
+      val name = "name"
+      val fieldType = FieldType.A_SIDE
+      val player = Player(name, fieldType)
+      "unapplied should have arguments" in {
+        Player.unapply(player).get should be((name, fieldType))
+      }
+    }
   }
 }

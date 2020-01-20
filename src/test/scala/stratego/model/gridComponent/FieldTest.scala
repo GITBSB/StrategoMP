@@ -30,11 +30,31 @@ class FieldTest extends WordSpec with Matchers{
       "has a FieldType" in {
         fieldWithFigure.getFieldType() should be (FieldType.B_SIDE)
       }
-      "has a String representation" in {
+      "has a TUI String representation" in {
         field.toStringTUI(GameState.NEW_GAME, player) should be (FieldType.B_SIDE.toString)
         fieldWithFigure.toStringTUI(GameState.END, player) should be (figure.get.toString)
         fieldWithFigure.toStringTUI(GameState.NEW_GAME, Player("TestPlayerB", FieldType.A_SIDE)) should be ("[??]")
         fieldWithFigure.toStringTUI(GameState.NEW_GAME, player) should be (figure.get.toString)
+      }
+      "has a GUI String representation" in {
+        field.toStringGUI(GameState.NEW_GAME, player) should be ("")
+        fieldWithFigure.toStringGUI(GameState.END, player) should be ("Major_TestPlayer")
+        fieldWithFigure.toStringGUI(GameState.NEW_GAME, Player("TestPlayerB", FieldType.A_SIDE)) should be ("backside_TestPlayer")
+        fieldWithFigure.toStringGUI(GameState.NEW_GAME, player) should be ("Major_TestPlayer")
+      }
+    }
+    "A Field" when {
+      val fieldType = FieldType.EMPTY_FIELD
+      val field = Field(fieldType, None)
+      "applied should accept the arguments" in {
+        Field.apply(fieldType, None) should be(field)
+      }
+    }
+    "A Field" when {
+      val fieldType = FieldType.EMPTY_FIELD
+      val field = Field(fieldType, None)
+      "unapplied should have arguments" in {
+        Field.unapply(field).get should be((fieldType, None))
       }
     }
   }

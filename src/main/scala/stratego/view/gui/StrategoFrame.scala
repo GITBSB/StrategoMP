@@ -5,19 +5,20 @@ import java.awt.image.BufferedImage
 import java.awt.{Color, Image}
 
 import javax.imageio.ImageIO
-import javax.swing.{BorderFactory, WindowConstants}
-import stratego.gameEngine.GameStatus
+import javax.swing.{BorderFactory, UIManager, WindowConstants}
 import stratego.model.engineComponent._
 import stratego.model.gridComponent.{FigureType, Position}
+import stratego.view.gui.util.StretchIcon
 
-import scala.swing.Swing.LineBorder
 import scala.swing.event._
 import scala.swing.{Frame, MenuBar, Reactor, _}
 
 class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   listenTo(gameEngine)
   title = "Stratego"
-  preferredSize = new Dimension(800, 800)
+  val windowHeight = 800
+  val windowWidth = 800
+  preferredSize = new Dimension(windowWidth, windowHeight)
 
   var fieldButtons = Array.ofDim[FieldButton](10, 10)
   var figureButtons = scala.collection.mutable.ListBuffer.empty[Button]
@@ -26,7 +27,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   override def closeOperation(): Unit = gameEngine.quitGame
   peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-
 
   menuBar = new MenuBar {
     contents += new Menu("Game") {
@@ -50,14 +50,15 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
   def gridPanel:Panel = new GridPanel(10, 10) {
     val originalImage: BufferedImage = ImageIO.read(getClass().getResource("/StrategoImages/Stratego_Board.jpg"));
-    val resizedImage = originalImage.getScaledInstance(700, 700, Image.SCALE_DEFAULT)
+    val resizedImage = originalImage.getScaledInstance(windowWidth - 101, windowHeight - 87, Image.SCALE_DEFAULT) //749 763
 
     override def paintComponent(g: Graphics2D): Unit = {
       super.paintComponent(g)
       if (null != resizedImage) g.drawImage(resizedImage, 0, 0, peer)
     }
-
-    border = LineBorder(java.awt.Color.BLACK, 2)
+    val compoundBorder = BorderFactory.createCompoundBorder(
+      BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder());
+    border = compoundBorder;
 
     for {
       x <- 0 until 10
@@ -68,7 +69,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
 
       if((x == 4 || x == 5) && (y == 2 || y == 3 || y == 6|| y == 7))
         fieldButtons(x)(y).enabled = false
-
       contents += fieldButton
       listenTo(fieldButton)
     }
@@ -80,23 +80,20 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
         if(gameEngine.getGameState == GameState.SET_FIGURES) {
           if (selectedFigureButton.isDefined) {
             if (selectedFigureButton.get.name == "Delete") {
-              // TODO: needs method to delete in GameEngine
-              publish(FigureDeletedEvent(gameEngine))
-              
+              gameEngine.deleteFigure(Position(selectedFieldButton.row, selectedFieldButton.column))
             } else {
               gameEngine.setFigure(FigureType.withName(selectedFigureButton.get.name), Position(selectedFieldButton.row, selectedFieldButton.column))
-              if (gameEngine.getStatusLine == GameStatus.FIGURE_SET) {
-                publish(FigureSetEvent(gameEngine))
-              }
             }
           }
         } else if(gameEngine.getGameState == GameState.FIGHT)
           if (fieldButtonSelect.isDefined) {
-            fieldButtonSelect.get.border =  selectedFieldButton.border
-            gameEngine.moveFigure(Position(fieldButtonSelect.asInstanceOf[FieldButton].row, fieldButtonSelect.asInstanceOf[FieldButton].column), Position(selectedFieldButton.row, selectedFieldButton.column))
+            fieldButtonSelect.get.border = UIManager.getBorder("Button.border")
+            gameEngine.moveFigure(Position(fieldButtonSelect.get.row, fieldButtonSelect.get.column), Position(selectedFieldButton.row, selectedFieldButton.column))
             fieldButtonSelect = None
           } else {
-            selectedFieldButton.border = BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder())
+            selectedFieldButton.border = BorderFactory.createLineBorder(Color.GREEN, 1)
+
+            fieldButtonSelect = Option(selectedFieldButton)
           }
       }
     }
@@ -144,12 +141,14 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     }
   }
 
-
-  val statusline = new TextField(gameEngine.getStatusLine.toString, 20)
+  val statusLine = new Label{
+    text = "Start a new Game."
+    font = new Font("Ariel", java.awt.Font.ITALIC, 18)
+  }
 
   contents = new BorderPanel {
     add(gridPanel, BorderPanel.Position.Center)
-    add(statusline, BorderPanel.Position.South)
+    add(statusLine, BorderPanel.Position.South)
     add(figurePanel, BorderPanel.Position.East)
   }
 
@@ -157,13 +156,21 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
   visible = true
 
   reactions += {
-    case event: GameQuit => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
-    case event: GameStartedEvent => clearField; updateFieldButtons
-    case event: FigureSetEvent => updateFieldButtons; updateFigureButtons
-    case event: MoveFigureEvent => updateStatusLine; updateFieldButtons
-    case event: FigureDeletedEvent => updateStatusLine; updateFieldButtons; updateFigureButtons
+    case event: GameQuitEvent => peer.dispatchEvent(new WindowEvent(peer, WindowEvent.WINDOW_CLOSING))
+    case event: GameStartedEvent => clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: FigureSetEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
+    case event: MoveFigureEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
+    case event: InvalidMoveEvent => updateStatusLine(event.gameEngine);
+    case event: AttackEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: WinnerEvent => printWinner(event.gameEngine); updateFieldButtons(event.gameEngine)
+    case event: FigureDeletedEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
   }
 
+  def printWinner(gameEngine: GameEngineInterface): Unit = {
+    val statusLineGUI = new StringBuilder
+    statusLineGUI.append(gameEngine.getStatusLine + "  -  Player " + gameEngine.getWinner.toString + " wins the game!")
+    statusLine.text = statusLineGUI.toString()
+  }
 
   def clearField(): Unit = {
     for {
@@ -172,24 +179,27 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     } fieldButtons(x)(y).clearImage
   }
 
-  def updateStatusLine(): Unit = {
-    statusline.text = gameEngine.getStatusLine.toString
+  def updateStatusLine(gameEngine: GameEngineInterface): Unit = {
+    val statusLineGUI = new StringBuilder
+    statusLineGUI.append(gameEngine.getActivePlayer.name + ": " +
+                         gameEngine.getGameState + "  -  " +
+                         gameEngine.getStatusLine)
+    statusLine.text = statusLineGUI.toString()
   }
 
-  def updateFieldButtons(): Unit = {
+  def updateFieldButtons(gameEngine: GameEngineInterface): Unit = {
     for {
       x <- 0 until 10
       y <- 0 until 10
     } {
-      val stringId = gameEngine.getFieldStringGUI(Position(x, y))
-      if(stringId == "") fieldButtons(x)(y).clearImage
-      else  fieldButtons(x)(y).setImage(stringId)
+      val imageId = gameEngine.getFieldStringGUI(Position(x, y))
+      if(imageId.length == 0) fieldButtons(x)(y).clearImage
+      else  fieldButtons(x)(y).setImage(imageId)
     }
   }
 
-  def updateFigureButtons = {
-    for(button <- figureButtons) {
-      button.text = gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(button.name)).toString
-    }
+  def updateFigureButtons(gameEngine: GameEngineInterface): Unit = {
+    figureButtons.foreach(b => b.text =
+      gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.withName(b.name)).toString)
   }
 }

@@ -45,7 +45,8 @@ class ConsoleView {
       activePlayerToString(gameEngine) +
       gridToString(gameEngine) +
       "Options:" +
-      "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]"
+      "\n\"m [a,y] [x,y]\": Move figure from field [a,b] to field [x,y]" +
+      "\nExample: 'm B,2 B,3'"
   }
 
   def gameStateToString(gameEngine: GameEngineInterface): String = {
@@ -74,7 +75,7 @@ class ConsoleView {
       "\n10 ->" + FigureType.SCOUT + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SCOUT) +
       "\n11 ->" + FigureType.SPY + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.SPY) +
       "\n12 ->" + FigureType.FLAG + " | " + gameEngine.getFigureSetActivePlayer.getFigureCount(FigureType.FLAG) +
-      "\n Plus Coordinates - Input example: B,3"
+      " Example: 's 2 B,3'"
   }
 
   def gridToString(gameEngine: GameEngineInterface): String = {

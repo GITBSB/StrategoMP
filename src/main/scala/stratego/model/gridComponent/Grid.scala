@@ -46,8 +46,6 @@ case class Grid (matrix: Matrix[Field] = new Matrix[Field](10, Field(FieldType.E
     assignField(from, None).assignField(to, figure)
   }
 
-  // private def noFieldAssignment(row: Int, col: Int, grid: GridInterface): GridInterface = {var grid = this; copy(grid.matrix.replaceField(row, col, Field(FieldType.NO_FIELD, None)))}
-
   def toStringTUI(gameState: GameState, activePlayer: Player): String = {
     var stringGrid = "\n"
     for {
@@ -57,7 +55,6 @@ case class Grid (matrix: Matrix[Field] = new Matrix[Field](10, Field(FieldType.E
       stringGrid += getField(Position(row, col)).toStringTUI(gameState, activePlayer)
       if (col == 9) stringGrid += " " + row +"\n"
     }
-    stringGrid + "- A - B - C - D - E - F - G - H - I - J";
+      stringGrid + "- A - B - C - D - E - F - G - H - I - J";
   }
-
 }

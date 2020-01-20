@@ -1,7 +1,7 @@
 package stratego.model.gridComponent
 
 import org.scalatest.{Matchers, WordSpec}
-import stratego.model.gridComponent.Figure.{Bomb, Captain, Colonel, Flag, General, Lieutenant, Major, Marshal, Miner, Scout, Sergeant, Spy}
+import stratego.model.gridComponent.Figure._
 import stratego.model.playerComponent.Player
 
 class FigureSetTest extends WordSpec with Matchers {
@@ -44,6 +44,47 @@ class FigureSetTest extends WordSpec with Matchers {
         figureSet = figureSet.addFigure(Bomb(player))
         figureSet.getFigureCount(FigureType.BOMB) should be (7)
       }
+    }
+  }
+  "A FigureSet" when {
+    val player = Player("Name", FieldType.A_SIDE)
+    val figureSet = new FigureSet(player)
+    "applied should accept the arguments" in {
+      FigureSet.apply(Map(
+        FigureType.BOMB -> List( Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player)),
+        FigureType.MARSHAL -> List(Marshal(player)),
+        FigureType.GENERAL -> List(General(player)),
+        FigureType.COLONEL -> List(Colonel(player), Colonel(player)),
+        FigureType.MAJOR -> List(Major(player), Major(player), Major(player)),
+        FigureType.CAPTAIN -> List(Captain(player), Captain(player), Captain(player), Captain(player)),
+        FigureType.LIEUTENANT -> List(Lieutenant(player), Lieutenant(player), Lieutenant(player), Lieutenant(player)),
+        FigureType.SERGEANT -> List(Sergeant(player), Sergeant(player), Sergeant(player), Sergeant(player)),
+        FigureType.MINER -> List(Miner(player), Miner(player), Miner(player), Miner(player), Miner(player)),
+        FigureType.SCOUT -> List(Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player)),
+        FigureType.SPY -> List(Spy(player)),
+        FigureType.FLAG -> List(Flag(player))
+      ), None) should be(figureSet)
+    }
+  }
+
+  "A FigureSet" when {
+    val player = Player("Name", FieldType.A_SIDE)
+    val figureSet = new FigureSet(player)
+    "unapplied should have arguments" in {
+      FigureSet.unapply(figureSet).get should be((Map(
+        FigureType.BOMB -> List( Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player), Bomb(player)),
+        FigureType.MARSHAL -> List(Marshal(player)),
+        FigureType.GENERAL -> List(General(player)),
+        FigureType.COLONEL -> List(Colonel(player), Colonel(player)),
+        FigureType.MAJOR -> List(Major(player), Major(player), Major(player)),
+        FigureType.CAPTAIN -> List(Captain(player), Captain(player), Captain(player), Captain(player)),
+        FigureType.LIEUTENANT -> List(Lieutenant(player), Lieutenant(player), Lieutenant(player), Lieutenant(player)),
+        FigureType.SERGEANT -> List(Sergeant(player), Sergeant(player), Sergeant(player), Sergeant(player)),
+        FigureType.MINER -> List(Miner(player), Miner(player), Miner(player), Miner(player), Miner(player)),
+        FigureType.SCOUT -> List(Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player), Scout(player)),
+        FigureType.SPY -> List(Spy(player)),
+        FigureType.FLAG -> List(Flag(player))
+      ), None))
     }
   }
 }

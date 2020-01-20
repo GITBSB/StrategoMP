@@ -3,7 +3,7 @@ package stratego.model.engineComponent
 import stratego.gameEngine.GameStatus.GameStatus
 import stratego.model.engineComponent.GameState.GameState
 import stratego.model.gridComponent.FigureType.FigureType
-import stratego.model.gridComponent.{Figure, FigureSet, GridInterface, Position}
+import stratego.model.gridComponent.{Figure, FigureSet, Position}
 import stratego.model.playerComponent.Player
 
 class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInterface {
@@ -20,6 +20,7 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
       case event: AttackEvent => this.publish(event)
       case event: WinnerEvent => this.publish(event)
       case event: GameQuitEvent => this.publish(event)
+      case event: FigureDeletedEvent => this.publish(event)
   }
 
   def startNewGame: GameEngineInterface =  {
@@ -41,12 +42,10 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
     remap(gameEngine.setFigure(figureType, position))
   }
 
+  def deleteFigure(position: Position): GameEngineInterface = remap(gameEngine.deleteFigure(position))
+
   def moveFigure(from: Position, to: Position): GameEngineInterface = {
     remap(gameEngine.moveFigure(from, to))
-  }
-
-  def setUpDefaultGrid: GameEngineInterface = {
-    remap(gameEngine.setUpDefaultGrid)
   }
 
   private def remap(newGameEngine: GameEngineInterface): GameEngineInterface = {
@@ -62,8 +61,6 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
 
   def getFigure(position: Position): Option[Figure] = gameEngine.getFigure(position)
 
-  def getGrid: GridInterface = gameEngine.getGrid
-
   def getGameState: GameState = gameEngine.getGameState
 
   def getActivePlayer: Player = gameEngine.getActivePlayer
@@ -73,4 +70,5 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   def getStatusLine: GameStatus = gameEngine.getStatusLine
 
   def getFieldStringGUI(position: Position): String = gameEngine.getFieldStringGUI(position)
+
 }
