@@ -2,22 +2,22 @@ package stratego
 
 import java.io.BufferedReader
 
+import com.google.inject.{Guice, Injector}
 import stratego.gameEngine.ConsoleController
-import stratego.model.engineComponent.{GameEngine, GameEngineProxy}
+import stratego.model.engineComponent.{GameEngineInterface}
 import stratego.view.gui.StrategoFrame
 import stratego.view.tui.{ConsoleOutput, ConsoleView}
 
 object Stratego {
 
- // val injector: Injector = Guice.createInjector(new StrategoModule)
-  val gameEngine = GameEngine()
-  val gameEngineProxy = new GameEngineProxy(gameEngine)
+  val injector: Injector = Guice.createInjector(new StrategoModule)
+  val gameEngine = injector.getInstance(classOf[GameEngineInterface])
   val consoleView = new ConsoleOutput(new ConsoleView)
-  val consoleController = new ConsoleController(gameEngineProxy)
+  val consoleController = new ConsoleController(gameEngine)
 
-  consoleView.listenTo(gameEngineProxy)
+  consoleView.listenTo(gameEngine)
   consoleView.printInitialMenu
-  new StrategoFrame(gameEngineProxy)
+  new StrategoFrame(gameEngine)
 
   def main(args: Array[String]): Unit = {
     processInput(new BufferedReader(Console.in), consoleController)
