@@ -12,7 +12,6 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
   listenTo(gameEngine)
   deafTo(this)
   reactions += {
-      case event: Init => this.publish(event)
       case event: GameStartedEvent => this.publish(event)
       case event: FigureSetEvent => this.publish(event)
       case event: MoveFigureEvent => this.publish(event)
@@ -23,30 +22,19 @@ class GameEngineProxy(var gameEngine: GameEngineInterface) extends GameEngineInt
       case event: FigureDeletedEvent => this.publish(event)
   }
 
-  def startNewGame: GameEngineInterface =  {
-    remap(gameEngine.startNewGame)
-  }
+  def startNewGame: GameEngineInterface = remap(gameEngine.startNewGame)
 
-  def quitGame: GameEngineInterface = {
-    remap(gameEngine.quitGame)
-  }
+  def quitGame: GameEngineInterface = remap(gameEngine.quitGame)
 
-  def startBattle: GameEngineInterface = {
-    remap(gameEngine.startBattle)
-  }
-  def changePlayer: GameEngineInterface = {
-    remap(gameEngine.changePlayer)
-  }
+  def startBattle: GameEngineInterface = remap(gameEngine.startBattle)
 
-  def setFigure(figureType: FigureType, position: Position): GameEngineInterface = {
-    remap(gameEngine.setFigure(figureType, position))
-  }
+  def changePlayer: GameEngineInterface = remap(gameEngine.changePlayer)
+
+  def setFigure(figureType: FigureType, position: Position): GameEngineInterface = remap(gameEngine.setFigure(figureType, position))
 
   def deleteFigure(position: Position): GameEngineInterface = remap(gameEngine.deleteFigure(position))
 
-  def moveFigure(from: Position, to: Position): GameEngineInterface = {
-    remap(gameEngine.moveFigure(from, to))
-  }
+  def moveFigure(from: Position, to: Position): GameEngineInterface = remap(gameEngine.moveFigure(from, to))
 
   private def remap(newGameEngine: GameEngineInterface): GameEngineInterface = {
     deafTo(gameEngine)

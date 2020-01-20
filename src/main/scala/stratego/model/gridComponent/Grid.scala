@@ -11,9 +11,7 @@ case class Grid (matrix: Matrix[Field] = new Matrix[Field](10, Field(FieldType.E
 
   def getField(position: Position): FieldInterface = matrix.getField(position.row, position.col)
 
-  def createNewGrid(): GridInterface = {
-    Grid().createPlayableGrid()
-  }
+  def createNewGrid(): GridInterface = Grid().createPlayableGrid()
 
   def createPlayableGrid(): GridInterface = {
     var newMatrix = matrix

@@ -33,7 +33,7 @@ class FigureSetTest extends WordSpec with Matchers {
         figureSet.getFigureCount(FigureType.BOMB) should be (5)
       }
       "have lastFigure as the removed figure" in {
-        figureSet.getLastFigure().get shouldBe a[Bomb]
+        figureSet.getLastFigure.get shouldBe a[Bomb]
       }
     }
     "add figure" should {

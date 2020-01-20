@@ -8,7 +8,6 @@ import stratego.model.gridComponent.FigureType._
 import stratego.model.gridComponent.{FigureType => _, _}
 import stratego.model.playerComponent.Player
 
-// TODO: Think about adding State Pattern instead of enum gameState
 case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
                            gameState: GameState = NOT_STARTED,
                            playerA: Player = Player("PlayerA", A_SIDE),
@@ -20,12 +19,12 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
 
   def startNewGame(): GameEngineInterface = {
     val newGameEngine = copy(gameState = GameState.SET_FIGURES)
-    publish(GameStartedEvent(newGameEngine)) // Add values which changed to the event so listeners can operate on them
+    publish(GameStartedEvent(newGameEngine))
     newGameEngine
   }
 
-  def quitGame(): GameEngineInterface = { //TODO: Review quit game logic
-    val newGameEngine = copy(gameState = END)
+  def quitGame(): GameEngineInterface = {
+    val newGameEngine = copy(gameState = END, grid = Grid(), statusLine = IDLE)
     publish(GameQuitEvent(newGameEngine))
     newGameEngine
   }
@@ -46,7 +45,7 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
         }
         val figureSetTmp = newFigureSet(activePlayer).removeFigure(figureType)
         newFigureSet = newFigureSet.updated(activePlayer, figureSetTmp)
-        newGrid = grid.assignField(position, newFigureSet(activePlayer).getLastFigure())
+        newGrid = grid.assignField(position, newFigureSet(activePlayer).getLastFigure)
       } else {
         newStatusLine = INVALID_POSITION
       }
@@ -101,7 +100,6 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
     if (source.getFigure.isDefined &&
       source.getFigure.get.player == activePlayer &&
       !isImmobileFigure(source.getFigure.get) ) {
-      //TODO: Implement move validation for scout
       val figure = source.getFigure.get
       if (destination.getFieldType != NO_FIELD && destination.getFigure.isEmpty && isValidMove(from, to)) {
         newGrid = newGrid.move(from, to)
@@ -110,7 +108,6 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
         publish(MoveFigureEvent(newGameEngine))
       } else if (destination.getFigure.isDefined && destination.getFigure.get.player != activePlayer && isValidMove(from, to)) {
         val opponent = destination.getFigure.get
-        // TODO: Wrap case code in generic function and stay DRY
         (figure, opponent) match {
           case (a:Spy, b:Marshal) =>
             newGrid = newGrid.move(from, to)
@@ -190,7 +187,7 @@ case class GameEngine (grid: GridInterface = Grid().createNewGrid(),
     newGameEngine
   }
 
-  def gridToString: String = grid.toStringTUI(gameState, activePlayer) //TODO: When time refactor these toStringTUI methods
+  def gridToString: String = grid.toStringTUI(gameState, activePlayer)
 
   def getFigure(position: Position): Option[Figure] = grid.getField(position).getFigure
 

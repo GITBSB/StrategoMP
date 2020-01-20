@@ -1,7 +1,7 @@
 package stratego.view.tui
 
 import com.typesafe.scalalogging.LazyLogging
-import stratego.model.engineComponent.{AttackEvent, FigureSetEvent, GameQuitEvent, GameStartedEvent, Init, InvalidMoveEvent, MoveFigureEvent, WinnerEvent}
+import stratego.model.engineComponent.{AttackEvent, FigureSetEvent, GameQuitEvent, GameStartedEvent, InvalidMoveEvent, MoveFigureEvent, WinnerEvent}
 
 import scala.swing.Reactor
 
