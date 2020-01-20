@@ -58,7 +58,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     }
     val compoundBorder = BorderFactory.createCompoundBorder(
       BorderFactory.createRaisedBevelBorder(), BorderFactory.createLoweredBevelBorder());
-    //border = LineBorder(java.awt.Color.DARK_GRAY, 2)
     border = compoundBorder;
 
     for {
