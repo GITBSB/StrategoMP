@@ -20,20 +20,41 @@ case class FigureSet(figures: Map[FigureType.FigureType, List[Figure]], lastFigu
  ), None)
 
   def removeFigure(figureType: FigureType.FigureType): FigureSet = {
-    var figureList = figures.get(figureType).get
+    removeFigureCall(figures(figureType).head)
+  }
+
+  def removeFigureCall(figure: Figure): FigureSet = {
+    cloCurFunctionFigure(removeFigureImpl)(figure)
+  }
+
+  def addFigure(figure: Figure): FigureSet = {
+    cloCurFunctionFigure(addFigureImpl)(figure)
+  }
+
+  def cloCurFunctionFigure(operateFunction:(Figure)=>FigureSet) (fig:Figure): FigureSet = {
+    operateFunction(fig)
+  }
+
+  def removeFigureImpl(figure: Figure): FigureSet = {
+    val figureList = figures(figure.figureType) diff List(figure)
+    copy(figures.updated(figure.figureType, figureList), Some(figure))
+  }
+
+  def addFigureImpl(figure: Figure): FigureSet = {
+    val figureList = figure :: figures(figure.figureType)
+    copy(figures.updated(figure.figureType, figureList), Some(figure))
+  }
+
+  def removeFigureOriginal(figureType: FigureType.FigureType): FigureSet = {
+    var figureList = figures(figureType)
     val lastFigure = figureList.head
     figureList = figureList diff List(lastFigure)
     copy(figures.updated(figureType, figureList), Some(lastFigure))
   }
 
-  def addFigure(figure: Figure): FigureSet = {
-    val figureList = figure :: figures.get(figure.figureType).get
-    copy(figures.updated(figure.figureType, figureList), Some(figure))
-  }
+  def getFigureCount(figureType: FigureType.FigureType): Int = figures(figureType).size
 
-  def getFigureCount(figureType: FigureType.FigureType): Int = figures.get(figureType).get.size
-
-  def getLastFigure(): Option[Figure] = lastFigure
+  def getLastFigure: Option[Figure] = lastFigure
 
   def noFiguresLeft(): Boolean = figures.values.foldLeft(0)((prev, next) => prev + next.size) == 0
 

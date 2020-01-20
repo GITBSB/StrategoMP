@@ -62,27 +62,27 @@ class GameEngineTest extends WordSpec with Matchers{
       val gameEngine = GameEngine()
       "have set a figure when placing on correct site" in {
         val position = Position(2, 2)
-        val nGame = gameEngine.setFigure(FigureType.FLAG, position)
-        nGame.getStatusLine should be (GameStatus.FIGURE_SET)
-        nGame.getGameState should be (GameState.SET_FIGURES)
+        val game = gameEngine.setFigure(FigureType.FLAG, position)
+        game.getStatusLine should be (GameStatus.FIGURE_SET)
+        game.getGameState should be (GameState.SET_FIGURES)
       }
       "have set no figure when placing on wrong site" in {
         val position = Position(9, 9)
-        val nGame = gameEngine.setFigure(FigureType.FLAG, position)
-        nGame.getStatusLine should be (GameStatus.INVALID_POSITION)
+        val game = gameEngine.setFigure(FigureType.FLAG, position)
+        game.getStatusLine should be (GameStatus.INVALID_POSITION)
       }
       "have replacing figure when field has figure" in {
         val position = Position(2, 2)
-        val nGame = gameEngine.setFigure(FigureType.FLAG, position)
-        val newGame = nGame.setFigure(FigureType.GENERAL, position)
-        val figure = newGame.getFigure(position)
+        var game = gameEngine.setFigure(FigureType.FLAG, position)
+        game = game.setFigure(FigureType.GENERAL, position)
+        val figure = game.getFigure(position)
         figure.get.figureType should be (FigureType.GENERAL)
       }
       "have not set figure when no figures of type left" in {
         val position = Position(2, 2)
-        val nGame = gameEngine.setFigure(FigureType.FLAG, position)
-        val newGame = nGame.setFigure(FigureType.FLAG, position)
-        newGame.getStatusLine should be (GameStatus.NO_FIGURES_LEFT)
+        var game = gameEngine.setFigure(FigureType.FLAG, position)
+        game = game.setFigure(FigureType.FLAG, position)
+        game.getStatusLine should be (GameStatus.NO_FIGURES_LEFT)
       }
       "and no figures left should start the battle" in {
         val nGame = setUpPlaceAllFigures

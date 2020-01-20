@@ -160,9 +160,6 @@ class StrategoFrame(gameEngine: GameEngineInterface) extends Frame with Reactor{
     case event: GameStartedEvent => clearField; updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: FigureSetEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
     case event: MoveFigureEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine); updateFigureButtons(event.gameEngine)
-  }
-
-  reactions += {
     case event: InvalidMoveEvent => updateStatusLine(event.gameEngine);
     case event: AttackEvent => updateStatusLine(event.gameEngine); updateFieldButtons(event.gameEngine)
     case event: WinnerEvent => printWinner(event.gameEngine); updateFieldButtons(event.gameEngine)
